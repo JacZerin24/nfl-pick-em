@@ -22,6 +22,7 @@ on:
       - "scripts/phase1_backtest.py"
       - "scripts/analyze_phase1.py"
       - "scripts/phase1_stacker.py"
+      - "scripts/phase1_market_residual.py"
       - "pyproject.toml"
       - ".github/workflows/phase1-backtest.yml"
 
@@ -81,6 +82,13 @@ jobs:
           python scripts/phase1_stacker.py \
             --predictions outputs/phase1/phase1_predictions.csv \
             --output-dir outputs/phase1/stacker \
+            --first-test-season 2019
+
+      - name: Run market-anchored residual correction
+        run: |
+          python scripts/phase1_market_residual.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/market_residual \
             --first-test-season 2019
 
       - name: Write run metadata
