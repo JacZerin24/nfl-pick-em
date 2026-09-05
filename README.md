@@ -8,6 +8,20 @@ Maximize **out-of-sample straight-up winner accuracy** for every NFL game while 
 
 This is not an against-the-spread betting model. The target is the game winner.
 
+## League lock rule
+
+The pick'em league does **not** lock an entire week at one time. Each game can be selected any time before that individual game's kickoff.
+
+That means the production system should optimize a **game-specific final forecast** rather than a single weekly forecast. For example:
+
+- Thursday night game: keep updating that game until shortly before Thursday kickoff.
+- Sunday early games: keep updating those games through Sunday morning and as close to their kickoffs as practical.
+- Sunday late games: continue refreshing those games after the early slate has locked if new information arrives.
+- Sunday night and Monday night games: continue updating those individual games until shortly before kickoff.
+- International/Saturday/holiday games follow the same rule: each game's own kickoff is its lock time.
+
+This is a major advantage for the model because later injury, inactive, quarterback, weather, and market information can be used for later games without forcing earlier games to wait or locking the entire slate too soon.
+
 ## Core philosophy
 
 The most powerful model is not necessarily the most complicated model. At the game level, the NFL provides only a few hundred labeled games per season, so model complexity must earn its place through true future-season performance.
@@ -57,12 +71,34 @@ The nflverse public injury feed currently has no post-2024 data. The model will 
 
 ## Prediction snapshots
 
-The system will support more than one forecast timestamp so historical tests match how the pick'em league actually operates.
+The system will support multiple forecast timestamps, but the **authoritative pick for each game is the latest valid snapshot generated before that game's kickoff**.
 
-- `early`: early-week forecast before final practice reports
-- `final`: latest permitted forecast before the pick deadline / kickoff
+Useful snapshot classes:
 
-Every feature must have an `as_of` time. No post-kickoff data, final injury knowledge, closing line, or later depth-chart update may leak into an earlier snapshot.
+- `early_week`: first useful forecast for planning and identifying uncertain games.
+- `practice_update`: refreshed after meaningful injury/practice/QB news.
+- `game_day`: refreshed on the day of the game with current weather, market, roster, and injury information.
+- `final_pre_kick`: latest practical forecast before the individual game's kickoff. This is the official pick'em recommendation.
+
+Every feature must have an `as_of` timestamp. No post-kickoff data, later injury knowledge, later line movement, later weather observation, or later depth-chart update may leak into an earlier snapshot.
+
+For historical validation, each replayed game should be scored using only information that would have been available by the corresponding pre-kickoff snapshot time. The model must never backtest a Thursday prediction using information that became known on Sunday, and it must never force a Sunday night prediction to use stale Thursday information when newer pre-kickoff data was available.
+
+## Live refresh logic
+
+The production pipeline should be event-aware rather than simply running once per week.
+
+For each scheduled game:
+
+1. Create an early forecast.
+2. Refresh when meaningful injury/QB/depth-chart information changes.
+3. Refresh market and weather information as game day approaches.
+4. Create a game-day forecast.
+5. Create the latest practical `final_pre_kick` snapshot before kickoff.
+6. Freeze/archive that game's final recommendation once kickoff occurs.
+7. Continue refreshing all later games on the slate until their own kickoffs.
+
+This allows Thursday, Sunday early, Sunday late, Sunday night, Monday night, international, Saturday, and holiday games to use different information cutoffs while remaining fully reproducible.
 
 ## Feature families
 
@@ -214,7 +250,7 @@ Use expanding walk-forward validation, for example:
 - ...
 - continue through the latest fully completed season
 
-A stricter weekly replay mode will later recreate what the model would have known before every historical game.
+A stricter weekly/game-level replay mode will recreate what the model would have known before every historical game's own kickoff.
 
 Primary metric:
 
@@ -314,21 +350,28 @@ nfl-pick-em/
 - market-override decision rule
 - confidence tiers
 
-### Phase 5 - weekly automation
+### Phase 5 - per-game live automation
 
-- scheduled data refresh
-- injury/weather refresh
-- early and final weekly forecasts
-- archived prediction snapshots
+- scheduled/event-driven data refresh
+- injury/QB/depth-chart refresh
+- game-specific weather refresh
+- current market refresh
+- early-week planning forecasts
+- game-day forecasts
+- final pre-kick forecast for each individual game
+- freeze/archive each game independently at kickoff
+- continue updating later games after earlier games have locked
 - automatic grading after games
 - season dashboard / CSV for pick'em entry
 
 ## Non-negotiable reproducibility rules
 
-- Every prediction is archived before kickoff.
+- Every official pick is archived before that individual game's kickoff.
 - Every data snapshot used for a prediction is timestamped.
+- Each game's latest eligible pre-kick snapshot is identifiable and reproducible.
 - Final scores never enter pregame feature generation.
-- Closing lines are only used for a forecast timestamp if they would actually have been available at that timestamp.
+- Market information is only used if it existed by that snapshot time.
+- Injury/QB/weather information is only used if it existed by that snapshot time.
 - Historical backtests are rerunnable from code.
 - We publish both wins and misses.
 
