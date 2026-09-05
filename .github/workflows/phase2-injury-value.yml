@@ -20,6 +20,7 @@ on:
       - build/pickem-model-foundation
     paths:
       - "scripts/phase2_injury_value.py"
+      - "scripts/phase2_injury_value_runner.py"
       - "scripts/phase1_backtest.py"
       - "pyproject.toml"
       - ".github/workflows/phase2-injury-value.yml"
@@ -62,7 +63,7 @@ jobs:
       - name: Run snap-weighted injury value experiment
         run: |
           mkdir -p outputs/phase2_injury_value
-          python scripts/phase2_injury_value.py \
+          python scripts/phase2_injury_value_runner.py \
             --start-season "${{ steps.seasons.outputs.start }}" \
             --first-test-season "${{ steps.seasons.outputs.first_test }}" \
             --end-season "${{ steps.seasons.outputs.end }}" \
