@@ -1,0 +1,92 @@
+name: Phase 2 Matchup Upset Specialist
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_season:
+        description: First season loaded for training/features
+        required: true
+        default: "2009"
+      first_test_season:
+        description: First walk-forward test season
+        required: true
+        default: "2016"
+      end_season:
+        description: Last completed season to test
+        required: true
+        default: "2025"
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/phase2_upset_specialist.py"
+      - "scripts/phase1_backtest.py"
+      - "pyproject.toml"
+      - ".github/workflows/phase2-upset-specialist.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  upset-specialist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Resolve seasons
+        id: seasons
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "start=${{ inputs.start_season }}" >> "$GITHUB_OUTPUT"
+            echo "first_test=${{ inputs.first_test_season }}" >> "$GITHUB_OUTPUT"
+            echo "end=${{ inputs.end_season }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "start=2009" >> "$GITHUB_OUTPUT"
+            echo "first_test=2016" >> "$GITHUB_OUTPUT"
+            echo "end=2025" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run matchup-driven upset specialist
+        run: |
+          mkdir -p outputs/phase2_upset_specialist
+          python scripts/phase2_upset_specialist.py \
+            --start-season "${{ steps.seasons.outputs.start }}" \
+            --first-test-season "${{ steps.seasons.outputs.first_test }}" \
+            --end-season "${{ steps.seasons.outputs.end }}" \
+            --output-dir outputs/phase2_upset_specialist
+
+      - name: Write run metadata
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "commit_sha=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "start_season=${{ steps.seasons.outputs.start }}"
+            echo "first_test_season=${{ steps.seasons.outputs.first_test }}"
+            echo "end_season=${{ steps.seasons.outputs.end }}"
+            date -u +"generated_utc=%Y-%m-%dT%H:%M:%SZ"
+          } > outputs/phase2_upset_specialist/run_metadata.txt
+
+      - name: Upload upset specialist results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-upset-specialist-results
+          path: outputs/phase2_upset_specialist/
+          if-no-files-found: warn
+          retention-days: 30
