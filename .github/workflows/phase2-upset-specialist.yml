@@ -20,6 +20,7 @@ on:
       - build/pickem-model-foundation
     paths:
       - "scripts/phase2_upset_specialist.py"
+      - "scripts/phase2_upset_selector.py"
       - "scripts/phase1_backtest.py"
       - "pyproject.toml"
       - ".github/workflows/phase2-upset-specialist.yml"
@@ -67,6 +68,13 @@ jobs:
             --first-test-season "${{ steps.seasons.outputs.first_test }}" \
             --end-season "${{ steps.seasons.outputs.end }}" \
             --output-dir outputs/phase2_upset_specialist
+
+      - name: Run nested selective upset caller
+        run: |
+          python scripts/phase2_upset_selector.py \
+            --predictions outputs/phase2_upset_specialist/upset_specialist_predictions.csv \
+            --output-dir outputs/phase2_upset_specialist/selector \
+            --first-test-season 2019
 
       - name: Write run metadata
         if: always()
