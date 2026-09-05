@@ -20,6 +20,7 @@ on:
       - build/pickem-model-foundation
     paths:
       - "scripts/phase1_backtest.py"
+      - "scripts/analyze_phase1.py"
       - "pyproject.toml"
       - ".github/workflows/phase1-backtest.yml"
 
@@ -66,6 +67,13 @@ jobs:
             --first-test-season "${{ steps.seasons.outputs.first_test }}" \
             --end-season "${{ steps.seasons.outputs.end }}" \
             --output-dir outputs/phase1
+
+      - name: Analyze paired lift and market disagreements
+        run: |
+          python scripts/analyze_phase1.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/analysis \
+            --bootstrap-reps 10000
 
       - name: Write run metadata
         if: always()
