@@ -9,10 +9,14 @@ on:
         default: "2026"
   push:
     branches:
+      - main
       - infra/fast-live-final-entry
     paths:
+      - "pyproject.toml"
       - "scripts/entry_controller.py"
       - "scripts/fast_operational_pickem.py"
+      - "scripts/frozen_artifacts.py"
+      - "frozen_artifacts/prospective-v1-frozen-2025/**"
       - ".github/workflows/final-entry-2026.yml"
   schedule:
     # Two controllers per hour provide redundancy without requiring a cron at T-12.
