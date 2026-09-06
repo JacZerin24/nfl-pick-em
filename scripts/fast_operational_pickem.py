@@ -9,6 +9,7 @@ team state are refreshed.
 from __future__ import annotations
 
 import argparse
+import csv
 from datetime import timezone
 from pathlib import Path
 
@@ -115,6 +116,23 @@ def combine_history(frozen_path: Path, current: pd.DataFrame | None) -> pd.DataF
     return merged.sort_values(["team", "gameday", "game_id"]).reset_index(drop=True)
 
 
+def archived_official_game_ids(output_dir: Path, season: int) -> set[str]:
+    """Return games that already have an actionable near-kick entry snapshot."""
+    official: set[str] = set()
+    season_root = output_dir / str(season)
+    for path in sorted(season_root.glob("week_*/snapshots/*/picks.csv")):
+        try:
+            with path.open("r", encoding="utf-8", newline="") as f:
+                for row in csv.DictReader(f):
+                    if (row.get("snapshot_role") or "").upper() in OFFICIAL_ROLES:
+                        game_id = row.get("game_id")
+                        if game_id:
+                            official.add(str(game_id))
+        except OSError:
+            continue
+    return official
+
+
 def render_markdown(picks: pd.DataFrame, snapshot: str, season: int, week: int, role: str) -> str:
     official = role in OFFICIAL_ROLES
     lines = [
@@ -164,6 +182,15 @@ def main() -> None:
     requested_ids = {x.strip() for x in args.game_ids.split(",") if x.strip()}
     if requested_ids:
         eligible = eligible.loc[eligible["game_id"].astype(str).isin(requested_ids)].copy()
+
+    # FINAL_ENTRY/FALLBACK_ENTRY is the actionable submission state. Routine
+    # updates are never allowed to create a later operational recommendation for
+    # a game after that state has been reached.
+    if role not in OFFICIAL_ROLES:
+        official_ids = archived_official_game_ids(args.output_dir, args.season)
+        if official_ids:
+            eligible = eligible.loc[~eligible["game_id"].astype(str).isin(official_ids)].copy()
+
     if eligible.empty:
         print(
             f"No eligible games for season={args.season} week={week} as of {snapshot}; "
