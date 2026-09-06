@@ -12,6 +12,7 @@ on:
   workflow_run:
     workflows:
       - "2026 Live NFL Pick'em"
+      - "2026 Final Entry Pick'em"
       - "Grade 2026 NFL Pick'em"
     types:
       - completed
