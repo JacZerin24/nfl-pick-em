@@ -6,7 +6,6 @@ on:
     branches:
       - research/player-level-matchups
     paths:
-      - "scripts/track_f_schema_probe.py"
       - "scripts/track_f_player_matchups.py"
       - "scripts/track_f_consensus_test.py"
       - ".github/workflows/track-f-player-matchups.yml"
@@ -45,12 +44,8 @@ jobs:
 
       - name: Validate script syntax
         run: |
-          python -m py_compile scripts/track_f_schema_probe.py
           python -m py_compile scripts/track_f_player_matchups.py
           python -m py_compile scripts/track_f_consensus_test.py
-
-      - name: Probe player data schemas
-        run: python scripts/track_f_schema_probe.py
 
       - name: Run Track F player matchup study
         run: python scripts/track_f_player_matchups.py
