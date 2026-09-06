@@ -1,0 +1,132 @@
+name: Build Fast Live Artifacts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - infra/fast-live-final-entry
+    paths:
+      - "scripts/frozen_artifacts.py"
+      - "scripts/build_frozen_artifacts.py"
+      - "scripts/fast_operational_pickem.py"
+      - "scripts/compare_live_runners.py"
+      - "scripts/entry_controller.py"
+      - ".github/workflows/build-fast-live-artifacts.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-fast-live-artifacts
+  cancel-in-progress: true
+
+jobs:
+  build-and-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out infrastructure branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Validate infrastructure syntax
+        run: |
+          python -m py_compile scripts/frozen_artifacts.py
+          python -m py_compile scripts/build_frozen_artifacts.py
+          python -m py_compile scripts/fast_operational_pickem.py
+          python -m py_compile scripts/compare_live_runners.py
+          python -m py_compile scripts/entry_controller.py
+
+      - name: Build prospective-v1 frozen artifacts
+        run: |
+          python scripts/build_frozen_artifacts.py \
+            --start-season 2009 \
+            --end-season 2025 \
+            --output-dir frozen_artifacts/prospective-v1-frozen-2025
+
+      - name: Run legacy live path for parity
+        run: |
+          mkdir -p outputs/fast_live_validation
+          /usr/bin/time -f "%e" -o outputs/fast_live_validation/legacy_seconds.txt \
+            python scripts/operational_pickem.py \
+              --season 2026 \
+              --week 1 \
+              --horizon-hours 999 \
+              --as-of-utc 2026-09-06T10:00:00Z \
+              --output-dir outputs/parity_slow
+
+      - name: Run frozen-artifact fast path for parity
+        run: |
+          /usr/bin/time -f "%e" -o outputs/fast_live_validation/fast_seconds.txt \
+            python scripts/fast_operational_pickem.py \
+              --season 2026 \
+              --week 1 \
+              --horizon-hours 999 \
+              --as-of-utc 2026-09-06T10:00:00Z \
+              --snapshot-role PARITY_TEST \
+              --artifact-dir frozen_artifacts/prospective-v1-frozen-2025 \
+              --output-dir outputs/parity_fast
+
+      - name: Require exact decision and probability parity
+        run: |
+          python scripts/compare_live_runners.py \
+            --slow-root outputs/parity_slow \
+            --fast-root outputs/parity_fast \
+            --tolerance 1e-7 \
+            --report outputs/fast_live_validation/parity.md
+
+      - name: Add validation summary
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f outputs/fast_live_validation/parity.md ]]; then
+            cat outputs/fast_live_validation/parity.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [[ -f outputs/fast_live_validation/legacy_seconds.txt && -f outputs/fast_live_validation/fast_seconds.txt ]]; then
+            {
+              echo ""
+              echo "## Runtime"
+              echo ""
+              echo "- Legacy runner: $(cat outputs/fast_live_validation/legacy_seconds.txt) seconds"
+              echo "- Fast runner: $(cat outputs/fast_live_validation/fast_seconds.txt) seconds"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Persist validated frozen artifacts to branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frozen_artifacts/prospective-v1-frozen-2025
+          if git diff --cached --quiet; then
+            echo "Frozen artifacts are unchanged."
+            exit 0
+          fi
+          git commit -m "Build validated frozen 2026 live artifacts"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Upload parity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-live-parity
+          path: |
+            outputs/fast_live_validation/
+            outputs/parity_slow/
+            outputs/parity_fast/
+            frozen_artifacts/prospective-v1-frozen-2025/manifest.json
+            frozen_artifacts/prospective-v1-frozen-2025/feature_manifest.json
+          retention-days: 90
+          if-no-files-found: warn
