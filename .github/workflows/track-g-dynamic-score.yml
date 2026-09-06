@@ -7,6 +7,7 @@ on:
       - research/dynamic-strength-score-distribution
     paths:
       - "scripts/track_g_dynamic_score.py"
+      - "scripts/track_g_sensitivity.py"
       - "scripts/track_g_integrated_test.py"
       - ".github/workflows/track-g-dynamic-score.yml"
 
@@ -46,6 +47,7 @@ jobs:
       - name: Validate research syntax
         run: |
           python -m py_compile scripts/track_g_dynamic_score.py
+          python -m py_compile scripts/track_g_sensitivity.py
           python -m py_compile scripts/track_g_integrated_test.py
 
       - name: Run Track G dynamic strength and score model
@@ -54,6 +56,12 @@ jobs:
             --start-season 2009 \
             --end-season 2025 \
             --output-dir outputs/track_g_dynamic_score \
+            --bootstrap-reps 50000
+
+      - name: Run Track G boundary-extension sensitivity
+        run: |
+          python scripts/track_g_sensitivity.py \
+            --output-dir outputs/track_g_dynamic_score/sensitivity \
             --bootstrap-reps 50000
 
       - name: Rebuild Phase 1 OOF predictions for frozen baseline
@@ -105,12 +113,20 @@ jobs:
             --output-dir outputs/track_g_baseline/integrated \
             --bootstrap-reps 50000
 
-      - name: Test Track G inside frozen architecture
+      - name: Test Track G first pass inside frozen architecture
         run: |
           python scripts/track_g_integrated_test.py \
             --track-g-predictions outputs/track_g_dynamic_score/track_g_predictions.csv \
             --current-integrated outputs/track_g_baseline/integrated/integrated_predictions.csv \
             --output-dir outputs/track_g_dynamic_score/integration \
+            --bootstrap-reps 50000
+
+      - name: Test Track G sensitivity inside frozen architecture
+        run: |
+          python scripts/track_g_integrated_test.py \
+            --track-g-predictions outputs/track_g_dynamic_score/sensitivity/track_g_sensitivity_predictions.csv \
+            --current-integrated outputs/track_g_baseline/integrated/integrated_predictions.csv \
+            --output-dir outputs/track_g_dynamic_score/integration_sensitivity \
             --bootstrap-reps 50000
 
       - name: Add research summaries
@@ -119,9 +135,17 @@ jobs:
           if [ -f outputs/track_g_dynamic_score/summary.md ]; then
             cat outputs/track_g_dynamic_score/summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f outputs/track_g_dynamic_score/sensitivity/summary_extended.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_g_dynamic_score/sensitivity/summary_extended.md >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ -f outputs/track_g_dynamic_score/integration/integration_summary.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
             cat outputs/track_g_dynamic_score/integration/integration_summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_g_dynamic_score/integration_sensitivity/integration_summary.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_g_dynamic_score/integration_sensitivity/integration_summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Track G outputs
