@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1020">
+  <meta name="description" content="2026 NFL Pick'em model dashboard with kickoff-aware picks, upset consensus signals, and prospective grading.">
+  <title>2026 NFL Pick'em Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark">P</div>
+      <div>
+        <div class="eyebrow">PROSPECTIVE MODEL</div>
+        <h1>NFL Pick'em <span>2026</span></h1>
+      </div>
+    </div>
+    <div class="status-wrap">
+      <span class="status-dot"></span>
+      <span id="modelStatus">Loading model…</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker">STRAIGHT-UP WINNER DECISION SYSTEM</p>
+        <h2>Pick the close games.<br><span>Earn the right upsets.</span></h2>
+        <p class="hero-sub">Market anchored. Frozen 2026 rules. Every game locks on its own kickoff, with the latest valid pre-kick snapshot becoming the official pick.</p>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-label">Validated 2019–2025 Holdout</div>
+        <div class="hero-score"><strong id="holdoutAccuracy">67.24%</strong><span>accuracy</span></div>
+        <div class="hero-delta" id="holdoutDelta">+16 picks vs market</div>
+      </div>
+    </section>
+
+    <section class="score-grid" aria-label="Season scoreboard">
+      <article class="score-card">
+        <span class="score-label">2026 Model</span>
+        <strong id="modelRecord">0–0</strong>
+        <span id="modelAccuracy">No games graded</span>
+      </article>
+      <article class="score-card">
+        <span class="score-label">Market Favorite</span>
+        <strong id="marketRecord">0–0</strong>
+        <span id="marketAccuracy">No games graded</span>
+      </article>
+      <article class="score-card accent-card">
+        <span class="score-label">Net Edge</span>
+        <strong id="netEdge">±0</strong>
+        <span>correct picks vs market</span>
+      </article>
+      <article class="score-card">
+        <span class="score-label">Official Graded</span>
+        <strong id="gradedGames">0</strong>
+        <span>games this season</span>
+      </article>
+    </section>
+
+    <section class="control-row">
+      <div class="week-control">
+        <label for="weekSelect">Week</label>
+        <select id="weekSelect" aria-label="Select NFL week"></select>
+      </div>
+      <div class="filters" role="group" aria-label="Filter games">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="close">Close</button>
+        <button class="filter" data-filter="upset">Upset radar</button>
+        <button class="filter" data-filter="frozen">Frozen</button>
+      </div>
+      <div class="last-update">
+        <span>Latest model snapshot</span>
+        <strong id="lastUpdate">—</strong>
+      </div>
+    </section>
+
+    <section class="legend">
+      <span><i class="legend-dot market"></i> Follow market</span>
+      <span><i class="legend-dot close"></i> Close-game decision</span>
+      <span><i class="legend-dot upset"></i> True upset consensus</span>
+      <span><i class="legend-dot frozen"></i> Frozen at kickoff</span>
+    </section>
+
+    <section id="games" class="games-grid" aria-live="polite"></section>
+
+    <section class="lower-grid">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="kicker">SEASON TRACKER</p>
+            <h3>Performance by decision type</h3>
+          </div>
+        </div>
+        <div id="decisionTable" class="table-wrap"></div>
+      </article>
+      <article class="panel rules-panel">
+        <p class="kicker">FROZEN RULES</p>
+        <h3>How the official pick is chosen</h3>
+        <div class="rule-stack">
+          <div class="rule-item"><b>&lt; 52.5%</b><span>Tossup. Market-anchored residual decides.</span></div>
+          <div class="rule-item"><b>52.5–79.9%</b><span>Favorite unless both upset specialists independently choose the dog.</span></div>
+          <div class="rule-item"><b>80%+</b><span>Stay with the market favorite.</span></div>
+        </div>
+        <p class="audit-note">Official grading always uses the newest archived snapshot strictly before that game's kickoff. 2026 results do not retune the frozen model weights.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <span>2026 NFL Pick'em • Prospective validation</span>
+    <a href="https://github.com/JacZerin24/nfl-pick-em" rel="noreferrer">View research & audit trail on GitHub ↗</a>
+  </footer>
+
+  <template id="gameTemplate">
+    <article class="game-card">
+      <div class="card-topline">
+        <span class="kickoff"></span>
+        <span class="lock-badge"></span>
+      </div>
+      <div class="matchup">
+        <div class="team away"><span class="team-code"></span><small>Away</small></div>
+        <div class="at">@</div>
+        <div class="team home"><span class="team-code"></span><small>Home</small></div>
+      </div>
+      <div class="pick-block">
+        <span class="pick-label">MODEL PICK</span>
+        <strong class="pick-team"></strong>
+        <span class="decision-badge"></span>
+      </div>
+      <div class="market-row">
+        <div>
+          <span>Market favorite</span>
+          <strong class="market-text"></strong>
+        </div>
+        <div class="market-bar"><span></span></div>
+      </div>
+      <div class="signal-grid">
+        <div><span>Matchup dog</span><strong class="matchup-dog"></strong></div>
+        <div><span>Variance dog</span><strong class="variance-dog"></strong></div>
+        <div><span>Spread</span><strong class="spread"></strong></div>
+        <div><span>Total</span><strong class="total"></strong></div>
+      </div>
+      <div class="result-strip" hidden></div>
+      <details>
+        <summary>Model details</summary>
+        <div class="details-grid">
+          <div><span>Residual home</span><strong class="residual-home"></strong></div>
+          <div><span>Elo home</span><strong class="elo-home"></strong></div>
+          <div><span>Logistic home</span><strong class="logistic-home"></strong></div>
+          <div><span>CatBoost home</span><strong class="catboost-home"></strong></div>
+          <div><span>Snapshot lead</span><strong class="lead-time"></strong></div>
+          <div><span>Snapshot</span><strong class="snapshot-time"></strong></div>
+        </div>
+      </details>
+    </article>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
