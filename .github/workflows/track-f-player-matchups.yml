@@ -8,6 +8,7 @@ on:
     paths:
       - "scripts/track_f_schema_probe.py"
       - "scripts/track_f_player_matchups.py"
+      - "scripts/track_f_consensus_test.py"
       - ".github/workflows/track-f-player-matchups.yml"
 
 permissions:
@@ -45,22 +46,27 @@ jobs:
       - name: Validate script syntax
         run: |
           python -m py_compile scripts/track_f_schema_probe.py
-          if [ -f scripts/track_f_player_matchups.py ]; then
-            python -m py_compile scripts/track_f_player_matchups.py
-          fi
+          python -m py_compile scripts/track_f_player_matchups.py
+          python -m py_compile scripts/track_f_consensus_test.py
 
       - name: Probe player data schemas
         run: python scripts/track_f_schema_probe.py
 
-      - name: Run Track F study
-        if: ${{ hashFiles('scripts/track_f_player_matchups.py') != '' }}
+      - name: Run Track F player matchup study
         run: python scripts/track_f_player_matchups.py
 
-      - name: Add research summary
+      - name: Run frozen-consensus architecture test
+        run: python scripts/track_f_consensus_test.py
+
+      - name: Add research summaries
         if: always()
         run: |
           if [ -f outputs/track_f_player_matchups/summary.md ]; then
             cat outputs/track_f_player_matchups/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_f_player_matchups/consensus_summary.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_f_player_matchups/consensus_summary.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Track F outputs
