@@ -1,14 +1,14 @@
 {
   "artifact_schema": 1,
-  "built_utc": "2026-09-06T11:52:12Z",
+  "built_utc": "2026-09-06T12:01:01Z",
   "files": {
-    "base_catboost.json": "5ae18f5d50a2ee5dee24ca093985fec1f1a5dfd085478391f3f8a04675253176",
-    "base_history_tail.csv": "3930bfab43bb6d9c60566d5435577b0bcc28bd1f099c482ed3f4774153be59b3",
-    "base_logistic.json": "9a4cd21287edec767128c928698c58086e85bbe01ef915bbba3b8696a179eb4b",
+    "base_catboost.json": "cd8b9a219566dc011964e3a96faf6ef7e32085c2fb3612c8f6edcdba07478d94",
+    "base_history_tail.csv": "2b0b200a409c0c49aa6686bf2aa5f4a54ec01031c8f3a8c24d64612194764ed6",
+    "base_logistic.json": "f50ad63004dc3a94485d5b23efb17d38904e22799fc2d43c8645305247b9200b",
     "feature_manifest.json": "af63ecdcddf5bcb4fba8adec7dc6872bdaec982e762a520f2385160d56e127ad",
-    "matchup_logistic.json": "3e9e8c4c362af8caa6c9055ef2a796e794c7e705e1c7920786db753e3eadb742",
-    "residual.json": "3560b2638bd0570a831a268640cd76b9236560b2453998e7935123e0bf28e0fc",
-    "variance_catboost.json": "8d97d42ca158861ccd7490ecf1a446ce9775f38955ee443d3ae676ef95628a83",
+    "matchup_logistic.json": "ef48ab8edba43ab12cfbd13d09cbdf7c124c98ac54cd8af04a7340b0517972f9",
+    "residual.json": "8dfe808ca17870e49a760a0bde6e452c5426a3108f604a8531f0c48ad5cdd721",
+    "variance_catboost.json": "f47ce1a9e5c7532f8f4250bea22c196b7ae8717d38d27b8894d0a3544932ee04",
     "variance_history_tail.csv": "a9725612d796c3825ce38d61da89741f540ddf725cb058d1601b32d66631df11"
   },
   "frozen_close_favorite_max": 0.525,
@@ -23,7 +23,7 @@
     "scipy": "1.17.1"
   },
   "python": "3.11.16",
-  "source_commit": "d35075b1e28f374c714db1bd38268ad6b580cba1",
+  "source_commit": "00156be256029d8062b0e0976be770fda53e56ce",
   "training_end_season": 2025,
   "training_start_season": 2009
 }
