@@ -43,6 +43,10 @@ function isFrozen(game) {
   return kickoff ? Date.now() >= kickoff.getTime() : Boolean(game.frozen);
 }
 
+function isOfficialEntry(game) {
+  return game.snapshot_role === 'FINAL_ENTRY' || game.snapshot_role === 'FALLBACK_ENTRY' || game.official_entry_snapshot === true;
+}
+
 function kickoffText(game) {
   const kickoff = parseDate(game.kickoff_utc);
   if (!kickoff) return 'Kickoff TBD';
@@ -115,6 +119,7 @@ function fillGameCard(game) {
   const node = $('gameTemplate').content.firstElementChild.cloneNode(true);
   const decision = decisionInfo(game.decision_type);
   const frozen = isFrozen(game);
+  const official = isOfficialEntry(game);
   const close = Number(game.market_fav_prob) < 0.525 || decision.cls === 'close';
 
   if (decision.cls === 'upset') node.classList.add('true-upset');
@@ -122,8 +127,16 @@ function fillGameCard(game) {
 
   node.querySelector('.kickoff').textContent = kickoffText(game);
   const lock = node.querySelector('.lock-badge');
-  lock.textContent = frozen ? 'FROZEN' : 'UPDATING';
-  if (!frozen) lock.classList.add('live');
+  if (frozen) {
+    lock.textContent = 'FROZEN';
+  } else if (official) {
+    lock.textContent = game.snapshot_role === 'FALLBACK_ENTRY' ? 'FINAL ENTRY • FALLBACK' : 'FINAL ENTRY';
+    lock.classList.add('final');
+    lock.title = 'This is the official near-kick recommendation to submit for this game.';
+  } else {
+    lock.textContent = 'UPDATING';
+    lock.classList.add('live');
+  }
 
   node.querySelector('.away .team-code').textContent = game.away_team || '—';
   node.querySelector('.home .team-code').textContent = game.home_team || '—';
