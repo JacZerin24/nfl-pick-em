@@ -1,0 +1,56 @@
+name: Track A QB Starter Change
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/qb-line-movement
+    paths:
+      - "scripts/track_a_qb_starter_change.py"
+      - "scripts/phase2_qb_ceiling.py"
+      - "scripts/phase1_backtest.py"
+      - "pyproject.toml"
+      - ".github/workflows/track-a-qb-starter-change.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install project
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Validate script syntax
+        run: python -m py_compile scripts/track_a_qb_starter_change.py
+
+      - name: Run starter-change replacement-value study
+        run: python scripts/track_a_qb_starter_change.py
+
+      - name: Add research summary
+        if: always()
+        run: |
+          if [ -f outputs/track_a_qb_starter_change/summary.md ]; then
+            cat outputs/track_a_qb_starter_change/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Track A outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-a-qb-starter-change
+          path: outputs/track_a_qb_starter_change
+          retention-days: 90
+          if-no-files-found: warn
