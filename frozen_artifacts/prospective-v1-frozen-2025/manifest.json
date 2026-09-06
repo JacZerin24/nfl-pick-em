@@ -1,0 +1,29 @@
+{
+  "artifact_schema": 1,
+  "built_utc": "2026-09-06T11:52:12Z",
+  "files": {
+    "base_catboost.json": "5ae18f5d50a2ee5dee24ca093985fec1f1a5dfd085478391f3f8a04675253176",
+    "base_history_tail.csv": "3930bfab43bb6d9c60566d5435577b0bcc28bd1f099c482ed3f4774153be59b3",
+    "base_logistic.json": "9a4cd21287edec767128c928698c58086e85bbe01ef915bbba3b8696a179eb4b",
+    "feature_manifest.json": "af63ecdcddf5bcb4fba8adec7dc6872bdaec982e762a520f2385160d56e127ad",
+    "matchup_logistic.json": "3e9e8c4c362af8caa6c9055ef2a796e794c7e705e1c7920786db753e3eadb742",
+    "residual.json": "3560b2638bd0570a831a268640cd76b9236560b2453998e7935123e0bf28e0fc",
+    "variance_catboost.json": "8d97d42ca158861ccd7490ecf1a446ce9775f38955ee443d3ae676ef95628a83",
+    "variance_history_tail.csv": "a9725612d796c3825ce38d61da89741f540ddf725cb058d1601b32d66631df11"
+  },
+  "frozen_close_favorite_max": 0.525,
+  "frozen_upset_favorite_max": 0.8,
+  "model_version": "prospective-v1-frozen-2025",
+  "packages": {
+    "catboost": "1.2.10",
+    "nflreadpy": "0.1.5",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1"
+  },
+  "python": "3.11.16",
+  "source_commit": "d35075b1e28f374c714db1bd38268ad6b580cba1",
+  "training_end_season": 2025,
+  "training_start_season": 2009
+}
