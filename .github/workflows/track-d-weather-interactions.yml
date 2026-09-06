@@ -7,6 +7,7 @@ on:
       - research/weather-interactions
     paths:
       - "scripts/track_d_weather_interactions.py"
+      - "scripts/track_d_weather_sensitivity.py"
       - ".github/workflows/track-d-weather-interactions.yml"
 
 permissions:
@@ -43,16 +44,25 @@ jobs:
             "tabulate>=0.9"
 
       - name: Validate script syntax
-        run: python -m py_compile scripts/track_d_weather_interactions.py
+        run: |
+          python -m py_compile scripts/track_d_weather_interactions.py
+          python -m py_compile scripts/track_d_weather_sensitivity.py
 
       - name: Run weather interaction study
         run: python scripts/track_d_weather_interactions.py
+
+      - name: Run weather sensitivity validation
+        run: python scripts/track_d_weather_sensitivity.py
 
       - name: Add research summary
         if: always()
         run: |
           if [ -f outputs/track_d_weather_interactions/summary.md ]; then
             cat outputs/track_d_weather_interactions/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_d_weather_interactions/sensitivity.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_d_weather_interactions/sensitivity.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Track D outputs
