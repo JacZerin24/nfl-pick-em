@@ -17,6 +17,7 @@ on:
         default: ""
   push:
     branches:
+      - main
       - build/pickem-model-foundation
     paths:
       - "scripts/operational_pickem.py"
@@ -63,7 +64,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Branch smoke test: build the complete upcoming Week 1 slate.
+            # Smoke test: build the complete upcoming Week 1 slate.
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=1" >> "$GITHUB_OUTPUT"
             echo "horizon=999" >> "$GITHUB_OUTPUT"
