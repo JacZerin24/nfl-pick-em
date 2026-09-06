@@ -1,0 +1,121 @@
+name: 2026 Live NFL Pick'em
+
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: NFL season
+        required: true
+        default: "2026"
+      week:
+        description: Week number; leave blank to auto-detect next unplayed week
+        required: false
+        default: ""
+      horizon_hours:
+        description: Only build games kicking off within this many hours; leave blank for all upcoming games in the week
+        required: false
+        default: ""
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/operational_pickem.py"
+      - ".github/workflows/live-2026-pickem.yml"
+  schedule:
+    # Cheap hourly schedule checks during the regular season. The Python runner
+    # exits before the expensive historical/model build unless a game is within
+    # the final 2.5-hour pre-kickoff window. This naturally handles Wednesday,
+    # Thursday, Friday/holiday, Saturday, Sunday, Monday and international games.
+    - cron: "17 * * 9-12 *"
+    - cron: "17 * * 1 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-2026-pickem
+  cancel-in-progress: false
+
+jobs:
+  live-picks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Resolve live run arguments
+        id: args
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            # Branch smoke test: build the complete upcoming Week 1 slate so we
+            # can verify output before merging the operational workflow to main.
+            echo "season=2026" >> "$GITHUB_OUTPUT"
+            echo "week=1" >> "$GITHUB_OUTPUT"
+            echo "horizon=999" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "season=${{ inputs.season }}" >> "$GITHUB_OUTPUT"
+            echo "week=${{ inputs.week }}" >> "$GITHUB_OUTPUT"
+            echo "horizon=${{ inputs.horizon_hours }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "season=2026" >> "$GITHUB_OUTPUT"
+            echo "week=" >> "$GITHUB_OUTPUT"
+            echo "horizon=2.5" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate kickoff-aware prospective picks
+        shell: bash
+        run: |
+          ARGS=(--season "${{ steps.args.outputs.season }}" --output-dir live_archive)
+          if [[ -n "${{ steps.args.outputs.week }}" ]]; then
+            ARGS+=(--week "${{ steps.args.outputs.week }}")
+          fi
+          if [[ -n "${{ steps.args.outputs.horizon }}" ]]; then
+            ARGS+=(--horizon-hours "${{ steps.args.outputs.horizon }}")
+          fi
+          python scripts/operational_pickem.py "${ARGS[@]}"
+
+      - name: Add latest pick sheet to job summary
+        if: ${{ hashFiles('live_archive/**/latest.md') != '' }}
+        shell: bash
+        run: |
+          LATEST=$(find live_archive -name latest.md -type f -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-)
+          if [[ -n "$LATEST" ]]; then
+            cat "$LATEST" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload live snapshot artifact
+        if: ${{ hashFiles('live_archive/**') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-pickem-${{ github.run_id }}
+          path: live_archive/
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Persist snapshot archive to repository
+        if: ${{ hashFiles('live_archive/**') != '' }}
+        shell: bash
+        run: |
+          if [[ -z "$(git status --porcelain -- live_archive)" ]]; then
+            echo "No new live archive files to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live_archive
+          git commit -m "Archive 2026 live pickem snapshot [skip ci]"
+          git push
