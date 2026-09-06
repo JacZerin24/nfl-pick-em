@@ -1,9 +1,10 @@
 """Grade archived 2026 NFL pick'em snapshots without hindsight.
 
-For each game, the official model pick is the latest archived snapshot whose
-snapshot timestamp is strictly before that game's kickoff. Later snapshots for
-other games do not rewrite already-kicked games. Results are joined only after
-the game is complete.
+For each game, the official model pick is the latest archived FINAL_ENTRY or
+FALLBACK_ENTRY snapshot strictly before kickoff when one exists. This matches
+the pick a user could realistically submit near kickoff. For backward
+compatibility, games without an official-entry role fall back to the latest
+archived pre-kick snapshot.
 """
 
 from __future__ import annotations
@@ -14,6 +15,8 @@ from pathlib import Path
 import nflreadpy as nfl
 import numpy as np
 import pandas as pd
+
+OFFICIAL_ENTRY_ROLES = {"FINAL_ENTRY", "FALLBACK_ENTRY"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -57,11 +60,22 @@ def collect_official_snapshots(season_root: Path) -> pd.DataFrame:
         (all_picks["kickoff_utc"] - all_picks["snapshot_utc"]).dt.total_seconds()
         / 60.0
     )
-    return (
-        all_picks.sort_values(["game_id", "snapshot_utc"])
-        .drop_duplicates("game_id", keep="last")
-        .reset_index(drop=True)
-    )
+    if "snapshot_role" not in all_picks.columns:
+        all_picks["snapshot_role"] = ""
+    all_picks["snapshot_role"] = all_picks["snapshot_role"].fillna("").astype(str).str.upper()
+
+    chosen: list[pd.DataFrame] = []
+    for _, group in all_picks.groupby("game_id", sort=False):
+        g = group.sort_values("snapshot_utc")
+        official = g.loc[g["snapshot_role"].isin(OFFICIAL_ENTRY_ROLES)]
+        if not official.empty:
+            row = official.tail(1).copy()
+            row["grading_snapshot_source"] = "official_entry"
+        else:
+            row = g.tail(1).copy()
+            row["grading_snapshot_source"] = "latest_pre_kick_fallback"
+        chosen.append(row)
+    return pd.concat(chosen, ignore_index=True).sort_values("game_id").reset_index(drop=True)
 
 
 def completed_schedule(season: int) -> pd.DataFrame:
@@ -123,7 +137,8 @@ def render_summary(results: pd.DataFrame, season: int) -> str:
             [
                 "No completed archived games have been graded yet.",
                 "",
-                "The official pick for each game will be the latest archived snapshot strictly before kickoff.",
+                "The official pick for each game will use the latest FINAL_ENTRY/FALLBACK_ENTRY "
+                "snapshot before kickoff when available, otherwise the latest archived pre-kick snapshot.",
             ]
         )
         return "\n".join(lines) + "\n"
@@ -172,13 +187,18 @@ def render_summary(results: pd.DataFrame, season: int) -> str:
         vw = int(group["market_correct"].astype(bool).sum())
         lines.append(f"| {int(week)} | {n} | {mw}-{n-mw} | {vw}-{n-vw} | {mw-vw:+d} |")
 
+    official_count = int(scored.get("grading_snapshot_source", pd.Series(dtype=str)).eq("official_entry").sum())
     lines.extend(
         [
             "",
             "## Audit rule",
             "",
-            "For each game, grading uses the latest timestamped snapshot archived before that game's kickoff. "
-            "The frozen 2026 model rules are not retuned from these results during the prospective season test.",
+            f"Official-entry snapshots used: **{official_count}/{games}**.",
+            "",
+            "For each game, grading prefers the latest timestamped FINAL_ENTRY or FALLBACK_ENTRY "
+            "snapshot archived before kickoff. If no such role exists for an older game, grading "
+            "falls back to the latest pre-kick snapshot. The frozen 2026 model rules are not retuned "
+            "from these results during the prospective season test.",
             "",
         ]
     )
