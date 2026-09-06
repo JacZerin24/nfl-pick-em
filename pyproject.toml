@@ -23,6 +23,12 @@ dev = [
   "ruff>=0.11",
 ]
 
+# This repository is a script-oriented project rather than a Python package.
+# Explicitly disable setuptools' flat-layout package auto-discovery so folders
+# such as site/, research/, and live_archive/ do not break `pip install -e .`.
+[tool.setuptools]
+py-modules = []
+
 [tool.ruff]
 line-length = 100
 
