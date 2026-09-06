@@ -6,6 +6,7 @@ on:
     branches:
       - infra/fast-live-final-entry
     paths:
+      - "pyproject.toml"
       - "scripts/frozen_artifacts.py"
       - "scripts/build_frozen_artifacts.py"
       - "scripts/fast_operational_pickem.py"
