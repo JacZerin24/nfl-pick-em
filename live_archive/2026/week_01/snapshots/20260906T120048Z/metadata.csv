@@ -1,2 +1,0 @@
-snapshot_utc,snapshot_role,official_entry_snapshot,runner_mode,artifact_manifest_sha256,model_version,season,week,eligible_games,training_end_season,pbp_end_season,frozen_upset_pairing,close_favorite_max,upset_favorite_max,artifact_built_utc
-2026-09-06T12:00:48Z,SMOKE_TEST,False,fast_frozen_artifacts,1bb0a0e425044e1d22fcbc2fb4e30cfc0e34b73077ae72f4f9b57b3fd38d1366,prospective-v1-frozen-2025,2026,1,16,2025,2025,matchup_logistic__variance_catboost,0.525,0.8,2026-09-06T11:52:12Z
