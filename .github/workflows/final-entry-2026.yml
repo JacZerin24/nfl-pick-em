@@ -1,0 +1,158 @@
+name: 2026 Final Entry Pick'em
+
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: NFL season
+        required: true
+        default: "2026"
+  push:
+    branches:
+      - infra/fast-live-final-entry
+    paths:
+      - "scripts/entry_controller.py"
+      - "scripts/fast_operational_pickem.py"
+      - ".github/workflows/final-entry-2026.yml"
+  schedule:
+    # Two controllers per hour provide redundancy without requiring a cron at T-12.
+    # The active controller waits inside the job until T-12, then retries at T-5.
+    - cron: "6,36 * * 9-12 *"
+    - cron: "6,36 * * 1 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: final-entry-2026
+  cancel-in-progress: true
+
+jobs:
+  final-entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+
+    steps:
+      - name: Check out current branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Resolve season
+        id: season
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ inputs.season }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=2026" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Plan nearest kickoff cluster
+        id: plan
+        shell: bash
+        run: |
+          python scripts/entry_controller.py plan \
+            --season "${{ steps.season.outputs.value }}" \
+            --archive-root live_archive \
+            --min-lead-minutes 3 \
+            --max-lead-minutes 75 \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Wait for primary entry target
+        if: steps.plan.outputs.active == 'true'
+        run: |
+          python scripts/entry_controller.py wait \
+            --kickoff-utc "${{ steps.plan.outputs.kickoff_utc }}" \
+            --target-lead-minutes "${{ steps.plan.outputs.primary_target_lead_minutes }}"
+
+      - name: Generate primary official entry snapshot
+        id: primary
+        if: steps.plan.outputs.active == 'true'
+        continue-on-error: true
+        run: |
+          python scripts/fast_operational_pickem.py \
+            --season "${{ steps.season.outputs.value }}" \
+            --game-ids "${{ steps.plan.outputs.game_ids }}" \
+            --snapshot-role "${{ steps.plan.outputs.primary_role }}" \
+            --artifact-dir frozen_artifacts/prospective-v1-frozen-2025 \
+            --output-dir live_archive
+
+      - name: Verify primary official entry snapshot
+        id: verify_primary
+        if: steps.plan.outputs.active == 'true'
+        continue-on-error: true
+        run: |
+          python scripts/entry_controller.py check \
+            --season "${{ steps.season.outputs.value }}" \
+            --archive-root live_archive \
+            --game-ids "${{ steps.plan.outputs.game_ids }}"
+
+      - name: Wait for T-5 fallback
+        if: steps.plan.outputs.active == 'true' && steps.verify_primary.outcome != 'success' && steps.plan.outputs.primary_role == 'FINAL_ENTRY'
+        run: |
+          python scripts/entry_controller.py wait \
+            --kickoff-utc "${{ steps.plan.outputs.kickoff_utc }}" \
+            --target-lead-minutes 5
+
+      - name: Generate fallback official entry snapshot
+        id: fallback
+        if: steps.plan.outputs.active == 'true' && steps.verify_primary.outcome != 'success'
+        continue-on-error: true
+        run: |
+          python scripts/fast_operational_pickem.py \
+            --season "${{ steps.season.outputs.value }}" \
+            --game-ids "${{ steps.plan.outputs.game_ids }}" \
+            --snapshot-role FALLBACK_ENTRY \
+            --artifact-dir frozen_artifacts/prospective-v1-frozen-2025 \
+            --output-dir live_archive
+
+      - name: Require an official entry snapshot
+        if: steps.plan.outputs.active == 'true'
+        run: |
+          python scripts/entry_controller.py check \
+            --season "${{ steps.season.outputs.value }}" \
+            --archive-root live_archive \
+            --game-ids "${{ steps.plan.outputs.game_ids }}"
+
+      - name: Add entry sheet to job summary
+        if: steps.plan.outputs.active == 'true' && hashFiles('live_archive/**/latest.md') != ''
+        shell: bash
+        run: |
+          LATEST=$(find live_archive -name latest.md -type f -printf '%T@ %p\n' | sort -nr | head -1 | cut -d' ' -f2-)
+          if [[ -n "$LATEST" ]]; then
+            cat "$LATEST" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Persist official entry snapshot
+        if: steps.plan.outputs.active == 'true'
+        shell: bash
+        run: |
+          if [[ -z "$(git status --porcelain -- live_archive)" ]]; then
+            echo "No new official entry snapshot to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live_archive
+          git commit -m "Archive 2026 official entry snapshot [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Upload official entry artifact
+        if: steps.plan.outputs.active == 'true' && hashFiles('live_archive/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-entry-${{ github.run_id }}
+          path: live_archive/
+          retention-days: 90
+          if-no-files-found: ignore
