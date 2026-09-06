@@ -1,0 +1,160 @@
+name: Track G Dynamic Strength and Score Distribution
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/dynamic-strength-score-distribution
+    paths:
+      - "scripts/track_g_dynamic_score.py"
+      - "scripts/track_g_sensitivity.py"
+      - "scripts/track_g_integrated_test.py"
+      - ".github/workflows/track-g-dynamic-score.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install \
+            "nflreadpy>=0.1.2" \
+            "polars>=1.30" \
+            "pandas>=2.2" \
+            "numpy>=2.0" \
+            "pyarrow>=18" \
+            "scikit-learn>=1.6" \
+            "catboost>=1.2.8" \
+            "scipy>=1.14" \
+            "joblib>=1.4" \
+            "tabulate>=0.9"
+
+      - name: Validate research syntax
+        run: |
+          python -m py_compile scripts/track_g_dynamic_score.py
+          python -m py_compile scripts/track_g_sensitivity.py
+          python -m py_compile scripts/track_g_integrated_test.py
+
+      - name: Run Track G dynamic strength and score model
+        run: |
+          python scripts/track_g_dynamic_score.py \
+            --start-season 2009 \
+            --end-season 2025 \
+            --output-dir outputs/track_g_dynamic_score \
+            --bootstrap-reps 50000
+
+      - name: Run Track G boundary-extension sensitivity
+        run: |
+          python scripts/track_g_sensitivity.py \
+            --output-dir outputs/track_g_dynamic_score/sensitivity \
+            --bootstrap-reps 50000
+
+      - name: Rebuild Phase 1 OOF predictions for frozen baseline
+        run: |
+          mkdir -p outputs/track_g_baseline/phase1
+          python scripts/phase1_backtest.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/track_g_baseline/phase1
+
+      - name: Rebuild nested close residual
+        run: |
+          python scripts/phase1_market_residual.py \
+            --predictions outputs/track_g_baseline/phase1/phase1_predictions.csv \
+            --output-dir outputs/track_g_baseline/market_residual \
+            --first-test-season 2019
+
+      - name: Rebuild matchup specialist
+        run: |
+          python scripts/phase2_upset_specialist.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/track_g_baseline/upset_specialist
+
+      - name: Rebuild variance specialist
+        run: |
+          python scripts/phase2_upset_variance.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/track_g_baseline/upset_variance
+
+      - name: Rebuild frozen upset consensus
+        run: |
+          python scripts/phase2_upset_consensus.py \
+            --matchup-predictions outputs/track_g_baseline/upset_specialist/upset_specialist_predictions.csv \
+            --variance-predictions outputs/track_g_baseline/upset_variance/variance_upset_predictions.csv \
+            --development-end-season 2018 \
+            --holdout-first-season 2019 \
+            --output-dir outputs/track_g_baseline/upset_consensus
+
+      - name: Rebuild current integrated holdout
+        run: |
+          python scripts/phase3_integrated_strategy.py \
+            --residual-predictions outputs/track_g_baseline/market_residual/market_residual_predictions.csv \
+            --consensus-predictions outputs/track_g_baseline/upset_consensus/consensus_holdout_predictions.csv \
+            --output-dir outputs/track_g_baseline/integrated \
+            --bootstrap-reps 50000
+
+      - name: Test Track G first pass inside frozen architecture
+        run: |
+          python scripts/track_g_integrated_test.py \
+            --track-g-predictions outputs/track_g_dynamic_score/track_g_predictions.csv \
+            --current-integrated outputs/track_g_baseline/integrated/integrated_predictions.csv \
+            --output-dir outputs/track_g_dynamic_score/integration \
+            --bootstrap-reps 50000
+
+      - name: Test Track G sensitivity inside frozen architecture
+        run: |
+          python scripts/track_g_integrated_test.py \
+            --track-g-predictions outputs/track_g_dynamic_score/sensitivity/track_g_sensitivity_predictions.csv \
+            --current-integrated outputs/track_g_baseline/integrated/integrated_predictions.csv \
+            --output-dir outputs/track_g_dynamic_score/integration_sensitivity \
+            --bootstrap-reps 50000
+
+      - name: Add research summaries
+        if: always()
+        run: |
+          if [ -f outputs/track_g_dynamic_score/summary.md ]; then
+            cat outputs/track_g_dynamic_score/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_g_dynamic_score/sensitivity/summary_extended.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_g_dynamic_score/sensitivity/summary_extended.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_g_dynamic_score/integration/integration_summary.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_g_dynamic_score/integration/integration_summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_g_dynamic_score/integration_sensitivity/integration_summary.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_g_dynamic_score/integration_sensitivity/integration_summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Track G outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-g-dynamic-score
+          path: |
+            outputs/track_g_dynamic_score/
+            outputs/track_g_baseline/integrated/
+          retention-days: 90
+          if-no-files-found: warn
