@@ -22,12 +22,14 @@ on:
       - "scripts/operational_pickem.py"
       - ".github/workflows/live-2026-pickem.yml"
   schedule:
-    # Cheap hourly schedule checks during the regular season. The Python runner
-    # exits before the expensive historical/model build unless a game is within
-    # the final 2.5-hour pre-kickoff window. This naturally handles Wednesday,
-    # Thursday, Friday/holiday, Saturday, Sunday, Monday and international games.
-    - cron: "17 * * 9-12 *"
-    - cron: "17 * * 1 *"
+    # Monday early look: build the complete next unplayed week for planning.
+    - cron: "5 13 * * 1"
+    # Hourly cheap checks during the regular season. :36 is intentional: for
+    # common NFL kickoff minutes (:00, :15, :20, :25, :35), the last scheduled
+    # run before kickoff begins roughly 24-59 minutes beforehand, leaving time
+    # for the model build and for the pick to be submitted.
+    - cron: "36 * * 9-12 *"
+    - cron: "36 * * 1 *"
 
 permissions:
   contents: write
@@ -61,8 +63,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Branch smoke test: build the complete upcoming Week 1 slate so we
-            # can verify output before merging the operational workflow to main.
+            # Branch smoke test: build the complete upcoming Week 1 slate.
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=1" >> "$GITHUB_OUTPUT"
             echo "horizon=999" >> "$GITHUB_OUTPUT"
@@ -70,6 +71,10 @@ jobs:
             echo "season=${{ inputs.season }}" >> "$GITHUB_OUTPUT"
             echo "week=${{ inputs.week }}" >> "$GITHUB_OUTPUT"
             echo "horizon=${{ inputs.horizon_hours }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event.schedule }}" == "5 13 * * 1" ]]; then
+            echo "season=2026" >> "$GITHUB_OUTPUT"
+            echo "week=" >> "$GITHUB_OUTPUT"
+            echo "horizon=999" >> "$GITHUB_OUTPUT"
           else
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=" >> "$GITHUB_OUTPUT"
