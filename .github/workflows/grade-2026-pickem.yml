@@ -1,0 +1,62 @@
+name: Grade 2026 NFL Pick'em
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/grade_live_pickem.py"
+      - ".github/workflows/grade-2026-pickem.yml"
+  schedule:
+    # Daily grading catches Thursday/Sunday/Monday and unusual international or
+    # holiday windows. No model retraining occurs here.
+    - cron: "15 12 * * 9-12"
+    - cron: "15 12 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: grade-2026-pickem
+  cancel-in-progress: false
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Grade latest pre-kick snapshots
+        run: python scripts/grade_live_pickem.py --season 2026 --archive-root live_archive
+
+      - name: Add scoreboard to job summary
+        if: ${{ hashFiles('live_archive/2026/season_summary.md') != '' }}
+        run: cat live_archive/2026/season_summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Persist grading files
+        shell: bash
+        run: |
+          if [[ -z "$(git status --porcelain -- live_archive/2026)" ]]; then
+            echo "No grading changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live_archive/2026
+          git commit -m "Update 2026 pickem scoreboard [skip ci]"
+          git push
