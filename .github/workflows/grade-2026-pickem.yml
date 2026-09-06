@@ -11,8 +11,8 @@ on:
   schedule:
     # Daily grading catches Thursday/Sunday/Monday and unusual international or
     # holiday windows. No model retraining occurs here.
-    - cron: "15 12 * * 9-12"
-    - cron: "15 12 * * 1"
+    - cron: "15 12 * 9-12 *"
+    - cron: "15 12 * 1 *"
 
 permissions:
   contents: write
