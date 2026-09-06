@@ -1,0 +1,2 @@
+snapshot_utc,model_version,season,week,eligible_games,training_end_season,pbp_end_season,frozen_upset_pairing,close_favorite_max,upset_favorite_max,residual_penalty,theta_intercept,theta_elo_delta,theta_logistic_delta,theta_catboost_delta,theta_consensus_delta
+2026-09-06T03:56:55Z,prospective-v1-frozen-2025,2026,1,16,2025,2025,matchup_logistic__variance_catboost,0.525,0.8,1000.0,-0.023680419785336495,-0.004537379019778489,-0.004026129120954946,0.0018981060979556853,-0.002221800680925921

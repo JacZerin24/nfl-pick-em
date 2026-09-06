@@ -1,0 +1,108 @@
+name: Phase 3 Integrated Pickem Strategy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/phase1_backtest.py"
+      - "scripts/phase1_market_residual.py"
+      - "scripts/phase2_upset_specialist.py"
+      - "scripts/phase2_upset_variance.py"
+      - "scripts/phase2_upset_consensus.py"
+      - "scripts/phase3_integrated_strategy.py"
+      - "pyproject.toml"
+      - ".github/workflows/phase3-integrated-strategy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  integrated-backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Build Phase 1 OOF predictions
+        run: |
+          mkdir -p outputs/phase1
+          python scripts/phase1_backtest.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/phase1
+
+      - name: Build nested close-game residual
+        run: |
+          python scripts/phase1_market_residual.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/market_residual \
+            --first-test-season 2019
+
+      - name: Build matchup specialist OOF predictions
+        run: |
+          python scripts/phase2_upset_specialist.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/phase2_upset_specialist
+
+      - name: Build explosive variance OOF predictions
+        run: |
+          python scripts/phase2_upset_variance.py \
+            --start-season 2009 \
+            --first-test-season 2016 \
+            --end-season 2025 \
+            --output-dir outputs/phase2_upset_variance
+
+      - name: Select consensus on 2016-2018 and freeze for holdout
+        run: |
+          python scripts/phase2_upset_consensus.py \
+            --matchup-predictions outputs/phase2_upset_specialist/upset_specialist_predictions.csv \
+            --variance-predictions outputs/phase2_upset_variance/variance_upset_predictions.csv \
+            --development-end-season 2018 \
+            --holdout-first-season 2019 \
+            --output-dir outputs/phase2_upset_consensus
+
+      - name: Evaluate integrated strategy on 2019-2025
+        run: |
+          python scripts/phase3_integrated_strategy.py \
+            --residual-predictions outputs/phase1/market_residual/market_residual_predictions.csv \
+            --consensus-predictions outputs/phase2_upset_consensus/consensus_holdout_predictions.csv \
+            --output-dir outputs/phase3_integrated \
+            --bootstrap-reps 50000
+
+      - name: Write run metadata
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "commit_sha=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            date -u +"generated_utc=%Y-%m-%dT%H:%M:%SZ"
+          } > outputs/phase3_integrated/run_metadata.txt
+
+      - name: Upload integrated research results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase3-integrated-results
+          path: |
+            outputs/phase2_upset_consensus/
+            outputs/phase3_integrated/
+          if-no-files-found: warn
+          retention-days: 30

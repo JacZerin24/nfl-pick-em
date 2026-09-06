@@ -1,0 +1,93 @@
+name: Phase 2 Injury Availability Value
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_season:
+        description: First season loaded
+        required: true
+        default: "2012"
+      first_test_season:
+        description: First walk-forward test season
+        required: true
+        default: "2016"
+      end_season:
+        description: Last historical injury season
+        required: true
+        default: "2024"
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/phase2_injury_value.py"
+      - "scripts/phase2_injury_value_runner.py"
+      - "scripts/phase1_backtest.py"
+      - "pyproject.toml"
+      - ".github/workflows/phase2-injury-value.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  injury-value:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Resolve seasons
+        id: seasons
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "start=${{ inputs.start_season }}" >> "$GITHUB_OUTPUT"
+            echo "first_test=${{ inputs.first_test_season }}" >> "$GITHUB_OUTPUT"
+            echo "end=${{ inputs.end_season }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "start=2012" >> "$GITHUB_OUTPUT"
+            echo "first_test=2016" >> "$GITHUB_OUTPUT"
+            echo "end=2024" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run snap-weighted injury value experiment
+        run: |
+          mkdir -p outputs/phase2_injury_value
+          python scripts/phase2_injury_value_runner.py \
+            --start-season "${{ steps.seasons.outputs.start }}" \
+            --first-test-season "${{ steps.seasons.outputs.first_test }}" \
+            --end-season "${{ steps.seasons.outputs.end }}" \
+            --output-dir outputs/phase2_injury_value
+
+      - name: Write run metadata
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "commit_sha=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "start_season=${{ steps.seasons.outputs.start }}"
+            echo "first_test_season=${{ steps.seasons.outputs.first_test }}"
+            echo "end_season=${{ steps.seasons.outputs.end }}"
+            date -u +"generated_utc=%Y-%m-%dT%H:%M:%SZ"
+          } > outputs/phase2_injury_value/run_metadata.txt
+
+      - name: Upload injury value results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2-injury-value-results
+          path: outputs/phase2_injury_value/
+          if-no-files-found: warn
+          retention-days: 30

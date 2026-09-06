@@ -1,0 +1,30 @@
+[project]
+name = "nfl-pick-em"
+version = "0.1.0"
+description = "Research-first NFL straight-up winner forecasting system"
+requires-python = ">=3.11"
+dependencies = [
+  "nflreadpy>=0.1.2",
+  "polars>=1.30",
+  "pandas>=2.2",
+  "numpy>=2.0",
+  "pyarrow>=18",
+  "scikit-learn>=1.6",
+  "catboost>=1.2.8",
+  "lightgbm>=4.6",
+  "scipy>=1.14",
+  "joblib>=1.4",
+  "tabulate>=0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.11",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

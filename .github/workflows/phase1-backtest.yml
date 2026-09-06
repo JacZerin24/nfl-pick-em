@@ -1,0 +1,132 @@
+name: Phase 1 NFL Pick'em Backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_season:
+        description: First season loaded for training/features
+        required: true
+        default: "2009"
+      first_test_season:
+        description: First out-of-sample season
+        required: true
+        default: "2016"
+      end_season:
+        description: Last completed season to test
+        required: true
+        default: "2025"
+  push:
+    branches:
+      - build/pickem-model-foundation
+    paths:
+      - "scripts/phase1_backtest.py"
+      - "scripts/analyze_phase1.py"
+      - "scripts/phase1_stacker.py"
+      - "scripts/phase1_market_residual.py"
+      - "scripts/phase1_pickem_strategy.py"
+      - "scripts/phase1_true_upset_policy.py"
+      - "pyproject.toml"
+      - ".github/workflows/phase1-backtest.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+
+      - name: Resolve seasons
+        id: seasons
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "start=${{ inputs.start_season }}" >> "$GITHUB_OUTPUT"
+            echo "first_test=${{ inputs.first_test_season }}" >> "$GITHUB_OUTPUT"
+            echo "end=${{ inputs.end_season }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "start=2009" >> "$GITHUB_OUTPUT"
+            echo "first_test=2016" >> "$GITHUB_OUTPUT"
+            echo "end=2025" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run expanding-window backtest
+        run: |
+          mkdir -p outputs/phase1
+          python scripts/phase1_backtest.py \
+            --start-season "${{ steps.seasons.outputs.start }}" \
+            --first-test-season "${{ steps.seasons.outputs.first_test }}" \
+            --end-season "${{ steps.seasons.outputs.end }}" \
+            --output-dir outputs/phase1
+
+      - name: Analyze paired lift and market disagreements
+        run: |
+          python scripts/analyze_phase1.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/analysis \
+            --bootstrap-reps 10000
+
+      - name: Run nested time-ordered stacker
+        run: |
+          python scripts/phase1_stacker.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/stacker \
+            --first-test-season 2019
+
+      - name: Run market-anchored residual correction
+        run: |
+          python scripts/phase1_market_residual.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/market_residual \
+            --first-test-season 2019
+
+      - name: Run pickem close-game and upset strategy lab
+        run: |
+          python scripts/phase1_pickem_strategy.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --residual-predictions outputs/phase1/market_residual/market_residual_predictions.csv \
+            --output-dir outputs/phase1/pickem_strategy \
+            --first-test-season 2019
+
+      - name: Re-run authoritative true-upset policy with full OOF history
+        run: |
+          python scripts/phase1_true_upset_policy.py \
+            --predictions outputs/phase1/phase1_predictions.csv \
+            --output-dir outputs/phase1/pickem_strategy \
+            --first-test-season 2019
+
+      - name: Write run metadata
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "commit_sha=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "start_season=${{ steps.seasons.outputs.start }}"
+            echo "first_test_season=${{ steps.seasons.outputs.first_test }}"
+            echo "end_season=${{ steps.seasons.outputs.end }}"
+            date -u +"generated_utc=%Y-%m-%dT%H:%M:%SZ"
+          } > outputs/phase1/run_metadata.txt
+
+      - name: Upload Phase 1 results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-backtest-results
+          path: outputs/phase1/
+          if-no-files-found: warn
+          retention-days: 30
