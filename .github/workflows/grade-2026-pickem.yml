@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - build/pickem-model-foundation
     paths:
       - "scripts/grade_live_pickem.py"
