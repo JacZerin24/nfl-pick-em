@@ -18,17 +18,18 @@ on:
   push:
     branches:
       - main
-      - build/pickem-model-foundation
+      - infra/fast-live-final-entry
     paths:
-      - "scripts/operational_pickem.py"
+      - "pyproject.toml"
+      - "scripts/fast_operational_pickem.py"
+      - "scripts/frozen_artifacts.py"
+      - "frozen_artifacts/prospective-v1-frozen-2025/**"
       - ".github/workflows/live-2026-pickem.yml"
   schedule:
     # Monday early look: build the complete next unplayed week for planning.
     - cron: "5 13 * * 1"
-    # Hourly cheap checks during the regular season. :36 is intentional: for
-    # common NFL kickoff minutes (:00, :15, :20, :25, :35), the last scheduled
-    # run before kickoff begins roughly 24-59 minutes beforehand, leaving time
-    # for the model build and for the pick to be submitted.
+    # Hourly market/model updates remain as a broad game-day safety layer.
+    # The separate Final Entry workflow handles the actionable T-12/T-5 snapshot.
     - cron: "36 * * 9-12 *"
     - cron: "36 * * 1 *"
 
@@ -42,7 +43,7 @@ concurrency:
 jobs:
   live-picks:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     steps:
       - name: Check out repository
@@ -64,35 +65,44 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Smoke test: build the complete upcoming Week 1 slate.
+            # Infrastructure smoke test: build the complete upcoming Week 1 slate.
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=1" >> "$GITHUB_OUTPUT"
             echo "horizon=999" >> "$GITHUB_OUTPUT"
+            echo "role=SMOKE_TEST" >> "$GITHUB_OUTPUT"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "season=${{ inputs.season }}" >> "$GITHUB_OUTPUT"
             echo "week=${{ inputs.week }}" >> "$GITHUB_OUTPUT"
             echo "horizon=${{ inputs.horizon_hours }}" >> "$GITHUB_OUTPUT"
+            echo "role=MANUAL_UPDATE" >> "$GITHUB_OUTPUT"
           elif [[ "${{ github.event.schedule }}" == "5 13 * * 1" ]]; then
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=" >> "$GITHUB_OUTPUT"
             echo "horizon=999" >> "$GITHUB_OUTPUT"
+            echo "role=EARLY_LOOK" >> "$GITHUB_OUTPUT"
           else
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=" >> "$GITHUB_OUTPUT"
             echo "horizon=2.5" >> "$GITHUB_OUTPUT"
+            echo "role=UPDATE" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Generate kickoff-aware prospective picks
         shell: bash
         run: |
-          ARGS=(--season "${{ steps.args.outputs.season }}" --output-dir live_archive)
+          ARGS=(
+            --season "${{ steps.args.outputs.season }}"
+            --snapshot-role "${{ steps.args.outputs.role }}"
+            --artifact-dir frozen_artifacts/prospective-v1-frozen-2025
+            --output-dir live_archive
+          )
           if [[ -n "${{ steps.args.outputs.week }}" ]]; then
             ARGS+=(--week "${{ steps.args.outputs.week }}")
           fi
           if [[ -n "${{ steps.args.outputs.horizon }}" ]]; then
             ARGS+=(--horizon-hours "${{ steps.args.outputs.horizon }}")
           fi
-          python scripts/operational_pickem.py "${ARGS[@]}"
+          python scripts/fast_operational_pickem.py "${ARGS[@]}"
 
       - name: Add latest pick sheet to job summary
         if: ${{ hashFiles('live_archive/**/latest.md') != '' }}
