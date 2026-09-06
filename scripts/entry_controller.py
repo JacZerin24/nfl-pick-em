@@ -96,6 +96,12 @@ def plan(args: argparse.Namespace) -> int:
     ids = ",".join(cluster["game_id"].astype(str).tolist())
     kickoff = pd.Timestamp(earliest).to_pydatetime().astimezone(timezone.utc)
     lead = (kickoff - now).total_seconds() / 60.0
+    if lead >= 8.0:
+        primary_role = "FINAL_ENTRY"
+        primary_target = 12.0
+    else:
+        primary_role = "FALLBACK_ENTRY"
+        primary_target = 5.0
     values = {
         "active": True,
         "reason": "entry_cluster_found",
@@ -103,6 +109,8 @@ def plan(args: argparse.Namespace) -> int:
         "game_count": len(cluster),
         "kickoff_utc": kickoff.isoformat().replace("+00:00", "Z"),
         "lead_minutes": f"{lead:.2f}",
+        "primary_role": primary_role,
+        "primary_target_lead_minutes": f"{primary_target:.1f}",
     }
     write_github_output(args.github_output, values)
     print(values)
