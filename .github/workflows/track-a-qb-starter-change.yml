@@ -27,11 +27,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
-      - name: Install project
+      - name: Install research dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          pip install \
+            "nflreadpy>=0.1.2" \
+            "polars>=1.30" \
+            "pandas>=2.2" \
+            "numpy>=2.0" \
+            "pyarrow>=18" \
+            "scikit-learn>=1.6" \
+            "catboost>=1.2.8" \
+            "lightgbm>=4.6" \
+            "scipy>=1.14" \
+            "joblib>=1.4" \
+            "tabulate>=0.9"
 
       - name: Validate script syntax
         run: python -m py_compile scripts/track_a_qb_starter_change.py
