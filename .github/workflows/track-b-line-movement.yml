@@ -1,0 +1,61 @@
+name: Track B 2026 Line Movement
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/qb-line-movement
+    paths:
+      - "scripts/track_b_line_movement.py"
+      - "live_archive/2026/**"
+      - ".github/workflows/track-b-line-movement.yml"
+  workflow_run:
+    workflows:
+      - "2026 Live NFL Pick'em"
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref_name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight analysis dependencies
+        run: pip install "pandas>=2.2" "numpy>=2.0"
+
+      - name: Validate script syntax
+        run: python -m py_compile scripts/track_b_line_movement.py
+
+      - name: Build prospective movement panel
+        run: python scripts/track_b_line_movement.py --season 2026
+
+      - name: Add collection summary
+        if: always()
+        run: |
+          if [ -f outputs/track_b_line_movement/summary.md ]; then
+            cat outputs/track_b_line_movement/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Track B outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-b-line-movement
+          path: outputs/track_b_line_movement
+          retention-days: 90
+          if-no-files-found: warn
