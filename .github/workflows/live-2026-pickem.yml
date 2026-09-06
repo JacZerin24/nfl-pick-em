@@ -123,7 +123,7 @@ jobs:
           retention-days: 90
 
       - name: Persist snapshot archive to repository
-        if: ${{ hashFiles('live_archive/**') != '' }}
+        if: ${{ steps.args.outputs.role != 'SMOKE_TEST' && hashFiles('live_archive/**') != '' }}
         shell: bash
         run: |
           if [[ -z "$(git status --porcelain -- live_archive)" ]]; then
