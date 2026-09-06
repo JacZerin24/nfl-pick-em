@@ -7,6 +7,7 @@ on:
       - research/travel-body-clock
     paths:
       - "scripts/track_e_travel_body_clock.py"
+      - "scripts/track_e_travel_sensitivity.py"
       - ".github/workflows/track-e-travel-body-clock.yml"
 
 permissions:
@@ -43,16 +44,25 @@ jobs:
             "tabulate>=0.9"
 
       - name: Validate script syntax
-        run: python -m py_compile scripts/track_e_travel_body_clock.py
+        run: |
+          python -m py_compile scripts/track_e_travel_body_clock.py
+          python -m py_compile scripts/track_e_travel_sensitivity.py
 
       - name: Run travel body-clock study
         run: python scripts/track_e_travel_body_clock.py
+
+      - name: Run extended regularization sensitivity
+        run: python scripts/track_e_travel_sensitivity.py
 
       - name: Add research summary
         if: always()
         run: |
           if [ -f outputs/track_e_travel_body_clock/summary.md ]; then
             cat outputs/track_e_travel_body_clock/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f outputs/track_e_travel_body_clock/extended_sensitivity.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat outputs/track_e_travel_body_clock/extended_sensitivity.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Track E outputs
