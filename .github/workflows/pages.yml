@@ -45,6 +45,9 @@ jobs:
       - name: Build audited dashboard data
         run: python scripts/build_pages_data.py --season 2026 --output site/data/dashboard.json
 
+      - name: Validate dashboard JavaScript
+        run: node --check site/app.js
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
