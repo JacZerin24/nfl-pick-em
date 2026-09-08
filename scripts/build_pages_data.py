@@ -1,9 +1,9 @@
 """Build a compact JSON payload for the GitHub Pages pick'em dashboard.
 
-The dashboard intentionally reuses the same immutable snapshot archive as the
-prospective grader. For each game it selects the newest archived prediction
-strictly before kickoff, so already-started games freeze while later games can
-continue to update.
+The dashboard reuses the immutable snapshot archive. Before an official near-kick
+entry exists it shows the newest valid pre-kick update. Once a FINAL_ENTRY or
+FALLBACK_ENTRY snapshot exists for a game, that actionable submission snapshot
+becomes the dashboard source of truth for that game.
 """
 
 from __future__ import annotations
@@ -15,6 +15,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+OFFICIAL_ENTRY_ROLES = {"FINAL_ENTRY", "FALLBACK_ENTRY"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,7 +86,6 @@ def latest_valid_rows(week_dir: Path) -> list[dict[str, str]]:
             row["archive_path"] = str(path)
             rows_by_game[game_id].append(row)
 
-    # Fall back to latest.csv during initial setup if no immutable snapshots exist.
     if not rows_by_game:
         for row in read_csv(week_dir / "latest.csv"):
             game_id = row.get("game_id", "")
@@ -97,9 +98,20 @@ def latest_valid_rows(week_dir: Path) -> list[dict[str, str]]:
 
     latest: list[dict[str, str]] = []
     for game_rows in rows_by_game.values():
-        game_rows.sort(key=lambda r: parse_dt(r.get("snapshot_utc")) or datetime.min.replace(tzinfo=timezone.utc))
-        latest.append(game_rows[-1])
-    latest.sort(key=lambda r: parse_dt(r.get("kickoff_utc")) or datetime.max.replace(tzinfo=timezone.utc))
+        game_rows.sort(
+            key=lambda r: parse_dt(r.get("snapshot_utc"))
+            or datetime.min.replace(tzinfo=timezone.utc)
+        )
+        official = [
+            r
+            for r in game_rows
+            if (r.get("snapshot_role") or "").upper() in OFFICIAL_ENTRY_ROLES
+        ]
+        latest.append(official[-1] if official else game_rows[-1])
+    latest.sort(
+        key=lambda r: parse_dt(r.get("kickoff_utc"))
+        or datetime.max.replace(tzinfo=timezone.utc)
+    )
     return latest
 
 
@@ -110,6 +122,7 @@ def game_payload(row: dict[str, str], result: dict[str, str] | None, now: dateti
     lead_minutes = None
     if kickoff and snap:
         lead_minutes = round((kickoff - snap).total_seconds() / 60.0, 1)
+    role = (row.get("snapshot_role") or "UPDATE").upper()
 
     payload: dict[str, Any] = {
         "game_id": row.get("game_id"),
@@ -117,6 +130,9 @@ def game_payload(row: dict[str, str], result: dict[str, str] | None, now: dateti
         "gameday": row.get("gameday"),
         "kickoff_utc": kickoff.isoformat().replace("+00:00", "Z") if kickoff else row.get("kickoff_utc"),
         "snapshot_utc": snap.isoformat().replace("+00:00", "Z") if snap else row.get("snapshot_utc"),
+        "snapshot_role": role,
+        "official_entry_snapshot": role in OFFICIAL_ENTRY_ROLES,
+        "runner_mode": row.get("runner_mode"),
         "lead_minutes": lead_minutes,
         "frozen": frozen,
         "away_team": row.get("away_team"),
@@ -221,7 +237,10 @@ def main() -> None:
             week_num = int(week_dir.name.split("_")[-1])
         except ValueError:
             continue
-        games = [game_payload(row, result_map.get(row.get("game_id", "")), now) for row in latest_valid_rows(week_dir)]
+        games = [
+            game_payload(row, result_map.get(row.get("game_id", "")), now)
+            for row in latest_valid_rows(week_dir)
+        ]
         if games:
             weeks.append({"week": week_num, "games": games})
 
@@ -233,7 +252,12 @@ def main() -> None:
     if current_week is None and weeks:
         current_week = weeks[-1]["week"]
 
-    versions = [game.get("model_version") for week in weeks for game in week["games"] if game.get("model_version")]
+    versions = [
+        game.get("model_version")
+        for week in weeks
+        for game in week["games"]
+        if game.get("model_version")
+    ]
     latest_snapshots = [
         parse_dt(game.get("snapshot_utc"))
         for week in weeks
