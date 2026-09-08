@@ -1,0 +1,142 @@
+name: Track H Market Microstructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      live_mode:
+        description: Use the live API instead of the committed fixture
+        required: true
+        default: false
+        type: boolean
+  push:
+    branches:
+      - research/track-h-market-microstructure
+    paths:
+      - "scripts/track_h_market_*.py"
+      - "research/track_h_market_microstructure.md"
+      - "research/fixtures/track_h_sample_odds.json"
+      - ".github/workflows/track-h-market-microstructure.yml"
+  schedule:
+    - cron: "17 2,10,18 * 9-12 *"
+    - cron: "17 2,10,18 * 1 *"
+  workflow_run:
+    workflows:
+      - "2026 Final Entry Pick'em"
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: track-h-market-microstructure-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight dependencies
+        run: pip install "pandas>=2.2" "numpy>=2.0"
+
+      - name: Validate collector syntax
+        run: python -m py_compile scripts/track_h_market_core.py scripts/track_h_market_archive.py scripts/track_h_market_microstructure.py
+
+      - name: Resolve collection mode
+        id: mode
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            MODE=fixture
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_run" ]]; then
+            MODE=near
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "${{ inputs.live_mode }}" == "true" ]]; then
+            MODE=full
+          elif [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            MODE=fixture
+          else
+            MODE=full
+          fi
+          echo "value=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Collection mode: $MODE"
+
+      - name: Validate with committed fixture
+        if: steps.mode.outputs.value == 'fixture'
+        run: |
+          python scripts/track_h_market_microstructure.py \
+            --season 2026 \
+            --fixture research/fixtures/track_h_sample_odds.json \
+            --snapshot-role FIXTURE_VALIDATION \
+            --now-utc 2026-09-08T14:01:00Z \
+            --no-archive
+
+      - name: Collect live multi-book market
+        if: steps.mode.outputs.value != 'fixture'
+        env:
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+        shell: bash
+        run: |
+          if [[ -z "$THE_ODDS_API_KEY" ]]; then
+            mkdir -p outputs/track_h_market_microstructure
+            printf '# Track H Market Microstructure\n\nLive collection is wired correctly but `THE_ODDS_API_KEY` is not configured, so no API call was made and no credits were used.\n' > outputs/track_h_market_microstructure/summary.md
+            exit 0
+          fi
+
+          if [[ "${{ steps.mode.outputs.value }}" == "near" ]]; then
+            python scripts/track_h_market_microstructure.py \
+              --season 2026 \
+              --markets h2h \
+              --snapshot-role NEAR_KICKOFF_H2H \
+              --near-kickoff-only \
+              --near-max-minutes 90
+          else
+            python scripts/track_h_market_microstructure.py \
+              --season 2026 \
+              --markets h2h,spreads,totals \
+              --snapshot-role SCHEDULED_FULL
+          fi
+
+      - name: Add Track H summary
+        if: always()
+        run: |
+          if [[ -f outputs/track_h_market_microstructure/summary.md ]]; then
+            cat outputs/track_h_market_microstructure/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Persist immutable market snapshot
+        if: steps.mode.outputs.value != 'fixture'
+        shell: bash
+        run: |
+          if [[ -z "$(git status --porcelain -- market_archive)" ]]; then
+            echo "No new Track H market snapshot to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add market_archive
+          git commit -m "Archive 2026 Track H market snapshot [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+
+      - name: Upload Track H outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-h-market-microstructure-${{ github.run_id }}
+          path: outputs/track_h_market_microstructure
+          retention-days: 90
+          if-no-files-found: warn
