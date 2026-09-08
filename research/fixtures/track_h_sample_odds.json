@@ -1,0 +1,56 @@
+[
+  {
+    "id": "sample_ne_sea",
+    "sport_key": "americanfootball_nfl",
+    "commence_time": "2026-09-10T00:20:00Z",
+    "home_team": "Seattle Seahawks",
+    "away_team": "New England Patriots",
+    "bookmakers": [
+      {
+        "key": "pinnacle", "title": "Pinnacle", "last_update": "2026-09-08T14:00:00Z",
+        "markets": [
+          {"key":"h2h","outcomes":[{"name":"New England Patriots","price":145},{"name":"Seattle Seahawks","price":-165}]},
+          {"key":"spreads","outcomes":[{"name":"New England Patriots","price":-108,"point":3.5},{"name":"Seattle Seahawks","price":-112,"point":-3.5}]},
+          {"key":"totals","outcomes":[{"name":"Over","price":-110,"point":44.5},{"name":"Under","price":-110,"point":44.5}]}
+        ]
+      },
+      {
+        "key": "draftkings", "title": "DraftKings", "last_update": "2026-09-08T13:59:30Z",
+        "markets": [
+          {"key":"h2h","outcomes":[{"name":"New England Patriots","price":142},{"name":"Seattle Seahawks","price":-170}]},
+          {"key":"spreads","outcomes":[{"name":"New England Patriots","price":-110,"point":3.5},{"name":"Seattle Seahawks","price":-110,"point":-3.5}]},
+          {"key":"totals","outcomes":[{"name":"Over","price":-108,"point":44.5},{"name":"Under","price":-112,"point":44.5}]}
+        ]
+      },
+      {
+        "key": "fanduel", "title": "FanDuel", "last_update": "2026-09-08T13:58:45Z",
+        "markets": [
+          {"key":"h2h","outcomes":[{"name":"New England Patriots","price":150},{"name":"Seattle Seahawks","price":-175}]},
+          {"key":"spreads","outcomes":[{"name":"New England Patriots","price":-105,"point":3.5},{"name":"Seattle Seahawks","price":-115,"point":-3.5}]},
+          {"key":"totals","outcomes":[{"name":"Over","price":-110,"point":45.0},{"name":"Under","price":-110,"point":45.0}]}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sample_sf_la",
+    "sport_key": "americanfootball_nfl",
+    "commence_time": "2026-09-11T00:35:00Z",
+    "home_team": "Los Angeles Rams",
+    "away_team": "San Francisco 49ers",
+    "bookmakers": [
+      {
+        "key": "pinnacle", "title": "Pinnacle", "last_update": "2026-09-08T14:00:15Z",
+        "markets": [{"key":"h2h","outcomes":[{"name":"San Francisco 49ers","price":155},{"name":"Los Angeles Rams","price":-178}]}]
+      },
+      {
+        "key": "draftkings", "title": "DraftKings", "last_update": "2026-09-08T13:59:45Z",
+        "markets": [{"key":"h2h","outcomes":[{"name":"San Francisco 49ers","price":154},{"name":"Los Angeles Rams","price":-185}]}]
+      },
+      {
+        "key": "fanduel", "title": "FanDuel", "last_update": "2026-09-08T13:57:00Z",
+        "markets": [{"key":"h2h","outcomes":[{"name":"San Francisco 49ers","price":160},{"name":"Los Angeles Rams","price":-190}]}]
+      }
+    ]
+  }
+]
