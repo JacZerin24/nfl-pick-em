@@ -20,6 +20,7 @@ on:
       - main
       - build/pickem-model-foundation
     paths:
+      - "pyproject.toml"
       - "scripts/operational_pickem.py"
       - ".github/workflows/live-2026-pickem.yml"
   schedule:
