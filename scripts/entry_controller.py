@@ -13,9 +13,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import nflreadpy as nfl
 import pandas as pd
 
+from nfl_data_access import load_schedules
 from operational_pickem import add_kickoff_times
 
 OFFICIAL_ROLES = {"FINAL_ENTRY", "FALLBACK_ENTRY"}
@@ -55,7 +55,7 @@ def read_official_game_ids(season_root: Path) -> set[str]:
 
 def plan(args: argparse.Namespace) -> int:
     now = datetime.now(timezone.utc)
-    schedule = nfl.load_schedules(args.season).to_pandas()
+    schedule = load_schedules(args.season).to_pandas()
     schedule["gameday"] = pd.to_datetime(schedule["gameday"])
     regular = schedule.loc[schedule["game_type"].eq("REG")].copy()
     regular = add_kickoff_times(regular)
