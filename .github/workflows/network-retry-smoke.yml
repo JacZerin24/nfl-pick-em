@@ -1,0 +1,57 @@
+name: Network Retry Smoke
+
+on:
+  push:
+    branches:
+      - infra/network-retry-hardening
+    paths:
+      - "scripts/nfl_data_access.py"
+      - "scripts/entry_controller.py"
+      - ".github/workflows/network-retry-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install project
+        run: python -m pip install --upgrade pip && pip install -e .
+      - name: Compile changed modules
+        run: python -m py_compile scripts/nfl_data_access.py scripts/entry_controller.py
+      - name: Prove transient retry recovery
+        run: |
+          PYTHONPATH=scripts python - <<'PY'
+          from urllib.error import URLError
+          from nfl_data_access import with_network_retry
+
+          calls = {"n": 0}
+          def flaky():
+              calls["n"] += 1
+              if calls["n"] < 3:
+                  raise URLError("simulated transient 502-style failure")
+              return "ok"
+
+          result = with_network_retry(
+              flaky,
+              label="retry smoke",
+              attempts=4,
+              initial_delay_seconds=0,
+          )
+          assert result == "ok"
+          assert calls["n"] == 3
+          print("Retry recovery PASS")
+          PY
+      - name: Exercise real Final Entry planner
+        run: |
+          python scripts/entry_controller.py plan \
+            --season 2026 \
+            --archive-root live_archive \
+            --min-lead-minutes 3 \
+            --max-lead-minutes 75
