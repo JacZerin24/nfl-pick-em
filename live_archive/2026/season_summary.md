@@ -1,5 +1,25 @@
 # 2026 NFL Pick'em Prospective Scoreboard
 
-No completed archived games have been graded yet.
+Official scored games: **1**
 
-The official pick for each game will use the latest FINAL_ENTRY/FALLBACK_ENTRY snapshot before kickoff when available, otherwise the latest archived pre-kick snapshot.
+- Model: **1-0 (100.0%)**
+- Market favorite: **1-0 (100.0%)**
+- Net correct picks vs market: **+0**
+
+## By decision type
+
+| Decision | Games | Record | Accuracy | Net vs market |
+|---|---:|---:|---:|---:|
+| FOLLOW_MARKET | 1 | 1-0 | 100.0% | +0 |
+
+## By week
+
+| Week | Games | Model | Market | Net |
+|---:|---:|---:|---:|---:|
+| 1 | 1 | 1-0 | 1-0 | +0 |
+
+## Audit rule
+
+Official-entry snapshots used: **0/1**.
+
+For each game, grading prefers the latest timestamped FINAL_ENTRY or FALLBACK_ENTRY snapshot archived before kickoff. If no such role exists for an older game, grading falls back to the latest pre-kick snapshot. The frozen 2026 model rules are not retuned from these results during the prospective season test.
