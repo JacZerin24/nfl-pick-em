@@ -63,7 +63,17 @@ def as_int(value: str | None) -> int | None:
 def as_bool(value: str | None) -> bool | None:
     if value in (None, ""):
         return None
-    return str(value).strip().lower() in {"1", "true", "t", "yes"}
+    text = str(value).strip().lower()
+    if text in {"true", "t", "yes"}:
+        return True
+    if text in {"false", "f", "no"}:
+        return False
+    if text == "nan":
+        return None
+    try:
+        return float(text) != 0.0
+    except (TypeError, ValueError):
+        return None
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
