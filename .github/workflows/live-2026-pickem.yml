@@ -26,9 +26,12 @@ on:
       - "frozen_artifacts/prospective-v1-frozen-2025/**"
       - ".github/workflows/live-2026-pickem.yml"
   schedule:
-    # Monday early look: build the complete next unplayed week for planning.
+    # Monday planning look. The resolver below advances to the next slate when
+    # the previous NFL week still has a Monday game remaining.
     - cron: "5 13 * * 1"
     # Hourly market/model updates remain as a broad game-day safety layer.
+    # If a newly-current week has no archive, the next hourly run automatically
+    # performs a full-week EARLY_LOOK_RECOVERY instead of waiting until T-2.5h.
     # The separate Final Entry workflow handles the actionable T-12/T-5 snapshot.
     - cron: "36 * * 9-12 *"
     - cron: "36 * * 1 *"
@@ -60,12 +63,97 @@ jobs:
       - name: Install project
         run: python -m pip install --upgrade pip && pip install -e .
 
+      - name: Resolve scheduled planning week
+        id: scheduled
+        if: ${{ github.event_name == 'schedule' }}
+        shell: bash
+        env:
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          GITHUB_OUTPUT_PATH: ${{ github.output }}
+        run: |
+          python - <<'PY'
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          import nflreadpy as nfl
+          import pandas as pd
+
+          from operational_pickem import add_kickoff_times
+
+          season = 2026
+          now = pd.Timestamp(datetime.now(timezone.utc))
+          schedule = nfl.load_schedules(season).to_pandas()
+          schedule = schedule.loc[schedule["game_type"].eq("REG")].copy()
+          schedule["gameday"] = pd.to_datetime(schedule["gameday"])
+          schedule = add_kickoff_times(schedule)
+
+          future = schedule.loc[
+              schedule["home_score"].isna()
+              & schedule["kickoff_utc"].notna()
+              & (schedule["kickoff_utc"] > now)
+          ].copy()
+          if future.empty:
+              raise SystemExit("No future regular-season games remain.")
+
+          future["week"] = pd.to_numeric(future["week"], errors="coerce")
+          weeks = sorted(int(x) for x in future["week"].dropna().unique())
+          current_week = weeks[0]
+          current_games = future.loc[future["week"].eq(current_week)]
+          first_kickoff = current_games["kickoff_utc"].min()
+          hours_to_first = (first_kickoff - now).total_seconds() / 3600.0
+
+          def archived(week: int) -> bool:
+              return (Path("live_archive") / str(season) / f"week_{week:02d}" / "latest.csv").exists()
+
+          event_schedule = os.environ.get("EVENT_SCHEDULE", "")
+          monday_early = event_schedule == "5 13 * * 1"
+
+          target_week = current_week
+          role = "UPDATE"
+          horizon = "2.5"
+          reason = "routine_update"
+
+          if monday_early:
+              # If the earliest unplayed game is still the prior week's Monday
+              # finale, its archive already exists and kickoff is close. Advance
+              # exactly one slate for the Monday planning look. If the prior week
+              # is already over, current_week is already the correct planning week.
+              later = [w for w in weeks if w > current_week]
+              if archived(current_week) and hours_to_first <= 36.0 and later:
+                  target_week = later[0]
+                  reason = "monday_advance_past_remaining_prior_week"
+              else:
+                  reason = "monday_current_upcoming_week"
+              role = "EARLY_LOOK"
+              horizon = "999"
+          elif not archived(current_week):
+              # Self-heal a missed/delayed Monday look as soon as the schedule
+              # rolls forward to a week that has never been archived.
+              role = "EARLY_LOOK_RECOVERY"
+              horizon = "999"
+              reason = "missing_current_week_archive"
+
+          output_path = os.environ["GITHUB_OUTPUT"]
+          with open(output_path, "a", encoding="utf-8") as f:
+              f.write(f"week={target_week}\n")
+              f.write(f"horizon={horizon}\n")
+              f.write(f"role={role}\n")
+              f.write(f"reason={reason}\n")
+
+          print(
+              f"Scheduled target: week={target_week} role={role} horizon={horizon}h "
+              f"reason={reason} current_week={current_week} "
+              f"hours_to_first={hours_to_first:.2f}"
+          )
+          PY
+
       - name: Resolve live run arguments
         id: args
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Infrastructure smoke test: build the complete upcoming Week 1 slate.
+            # Infrastructure smoke test: build the complete Week 1 slate when available.
             echo "season=2026" >> "$GITHUB_OUTPUT"
             echo "week=1" >> "$GITHUB_OUTPUT"
             echo "horizon=999" >> "$GITHUB_OUTPUT"
@@ -75,16 +163,11 @@ jobs:
             echo "week=${{ inputs.week }}" >> "$GITHUB_OUTPUT"
             echo "horizon=${{ inputs.horizon_hours }}" >> "$GITHUB_OUTPUT"
             echo "role=MANUAL_UPDATE" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event.schedule }}" == "5 13 * * 1" ]]; then
-            echo "season=2026" >> "$GITHUB_OUTPUT"
-            echo "week=" >> "$GITHUB_OUTPUT"
-            echo "horizon=999" >> "$GITHUB_OUTPUT"
-            echo "role=EARLY_LOOK" >> "$GITHUB_OUTPUT"
           else
             echo "season=2026" >> "$GITHUB_OUTPUT"
-            echo "week=" >> "$GITHUB_OUTPUT"
-            echo "horizon=2.5" >> "$GITHUB_OUTPUT"
-            echo "role=UPDATE" >> "$GITHUB_OUTPUT"
+            echo "week=${{ steps.scheduled.outputs.week }}" >> "$GITHUB_OUTPUT"
+            echo "horizon=${{ steps.scheduled.outputs.horizon }}" >> "$GITHUB_OUTPUT"
+            echo "role=${{ steps.scheduled.outputs.role }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Generate kickoff-aware prospective picks
