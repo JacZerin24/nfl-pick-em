@@ -69,16 +69,17 @@ jobs:
         shell: bash
         env:
           EVENT_SCHEDULE: ${{ github.event.schedule }}
-          GITHUB_OUTPUT_PATH: ${{ github.output }}
         run: |
           python - <<'PY'
           import os
+          import sys
           from datetime import datetime, timezone
           from pathlib import Path
 
           import nflreadpy as nfl
           import pandas as pd
 
+          sys.path.insert(0, str(Path.cwd() / "scripts"))
           from operational_pickem import add_kickoff_times
 
           season = 2026
@@ -104,7 +105,12 @@ jobs:
           hours_to_first = (first_kickoff - now).total_seconds() / 3600.0
 
           def archived(week: int) -> bool:
-              return (Path("live_archive") / str(season) / f"week_{week:02d}" / "latest.csv").exists()
+              return (
+                  Path("live_archive")
+                  / str(season)
+                  / f"week_{week:02d}"
+                  / "latest.csv"
+              ).exists()
 
           event_schedule = os.environ.get("EVENT_SCHEDULE", "")
           monday_early = event_schedule == "5 13 * * 1"
