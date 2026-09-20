@@ -26,13 +26,21 @@ on:
       - "frozen_artifacts/prospective-v1-frozen-2025/**"
       - ".github/workflows/live-2026-pickem.yml"
   schedule:
+    # Day-of official pick sheet. Two morning attempts add redundancy against a
+    # delayed/dropped GitHub cron. The later 10:17 UTC run is still 3h13m before
+    # an 8:30 AM CT / 13:30 UTC international kickoff during daylight time.
+    # These snapshots become FINAL_ENTRY so the dashboard is stable hours before
+    # kickoff; the separate near-kick workflow remains only a fallback if both
+    # morning attempts fail.
+    - cron: "17 9,10 * * 0,1,4"
     # Monday planning look. The resolver below advances to the next slate when
     # the previous NFL week still has a Monday game remaining.
     - cron: "5 13 * * 1"
-    # Hourly market/model updates remain as a broad game-day safety layer.
+    # Hourly market/model updates remain as a broad safety layer. Once a morning
+    # FINAL_ENTRY exists for a game, the runner excludes that game from routine
+    # updates, so the published official pick does not change near kickoff.
     # If a newly-current week has no archive, the next hourly run automatically
     # performs a full-week EARLY_LOOK_RECOVERY instead of waiting until T-2.5h.
-    # The separate Final Entry workflow handles the actionable T-12/T-5 snapshot.
     - cron: "36 * * 9-12 *"
     - cron: "36 * * 1 *"
 
@@ -113,6 +121,7 @@ jobs:
               ).exists()
 
           event_schedule = os.environ.get("EVENT_SCHEDULE", "")
+          day_of_morning = event_schedule == "17 9,10 * * 0,1,4"
           monday_early = event_schedule == "5 13 * * 1"
 
           target_week = current_week
@@ -120,7 +129,14 @@ jobs:
           horizon = "2.5"
           reason = "routine_update"
 
-          if monday_early:
+          if day_of_morning:
+              # Freeze the usable day-of sheet hours before the earliest kickoff.
+              # A 24-hour horizon captures the full Thursday/Sunday/Monday local
+              # slate without pulling in the following NFL day.
+              role = "FINAL_ENTRY"
+              horizon = "24"
+              reason = "day_of_morning_official_entry"
+          elif monday_early:
               # If the earliest unplayed game is still the prior week's Monday
               # finale, its archive already exists and kickoff is close. Advance
               # exactly one slate for the Monday planning look. If the prior week
