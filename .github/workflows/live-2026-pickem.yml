@@ -175,12 +175,11 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            # Repository changes to live infrastructure double as an immediate
-            # real-world operational refresh of the current slate.
+            # Infrastructure smoke test: build the complete Week 1 slate when available.
             echo "season=2026" >> "$GITHUB_OUTPUT"
-            echo "week=" >> "$GITHUB_OUTPUT"
-            echo "horizon=24" >> "$GITHUB_OUTPUT"
-            echo "role=MANUAL_UPDATE" >> "$GITHUB_OUTPUT"
+            echo "week=1" >> "$GITHUB_OUTPUT"
+            echo "horizon=999" >> "$GITHUB_OUTPUT"
+            echo "role=SMOKE_TEST" >> "$GITHUB_OUTPUT"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "season=${{ inputs.season }}" >> "$GITHUB_OUTPUT"
             echo "week=${{ inputs.week }}" >> "$GITHUB_OUTPUT"
