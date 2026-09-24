@@ -1,0 +1,48 @@
+name: Track I Star Position Diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/individual-star-injuries
+    paths:
+      - "scripts/track_i_star_position_diagnostics.py"
+      - ".github/workflows/track-i-star-position-diagnostics.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install project
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+      - name: Validate syntax
+        run: python -m py_compile scripts/track_i_star_position_diagnostics.py
+      - name: Run position and specific-star diagnostics
+        run: python scripts/track_i_star_position_diagnostics.py
+      - name: Add summary
+        if: always()
+        run: |
+          if [ -f outputs/track_i_star_position_diagnostics/summary.md ]; then
+            cat outputs/track_i_star_position_diagnostics/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-i-star-position-diagnostics
+          path: outputs/track_i_star_position_diagnostics
+          retention-days: 90
+          if-no-files-found: warn
