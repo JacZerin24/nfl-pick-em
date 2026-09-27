@@ -1,0 +1,2364 @@
+[
+  {
+    "away_team": "Arizona Cardinals",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 597
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -910
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 500
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -850
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 480
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -770
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 550
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -1000
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betmgm",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:18Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 425
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -625
+              }
+            ]
+          }
+        ],
+        "title": "BetMGM"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:57:18Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:18Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 659
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -1031
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:58:37Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:37Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 425
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -700
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      }
+    ],
+    "commence_time": "2026-09-27T20:05:20Z",
+    "home_team": "San Francisco 49ers",
+    "id": "9d2b09e0f9b6dd5ce0d985894f4f98fa",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Minnesota Vikings",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -256
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 193
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -265
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 200
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -305
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 230
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -333
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 230
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betmgm",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -235
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 185
+              }
+            ]
+          }
+        ],
+        "title": "BetMGM"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:56:23Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:56:23Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -210
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 160
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:57:18Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:18Z",
+            "outcomes": [
+              {
+                "name": "Minnesota Vikings",
+                "price": -165
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": 138
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      }
+    ],
+    "commence_time": "2026-09-27T20:05:41Z",
+    "home_team": "Tampa Bay Buccaneers",
+    "id": "f1724dead3eab61546033032fc782375",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Las Vegas Raiders",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 398
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -575
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 390
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -590
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 390
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -590
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 425
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -625
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betmgm",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:18Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 360
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -500
+              }
+            ]
+          }
+        ],
+        "title": "BetMGM"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:58:49Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:49Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 374
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -488
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:58:37Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:37Z",
+            "outcomes": [
+              {
+                "name": "Las Vegas Raiders",
+                "price": 340
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -525
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      }
+    ],
+    "commence_time": "2026-09-27T20:25:32Z",
+    "home_team": "New Orleans Saints",
+    "id": "2e523fcb0497aa689473e290eb2b97de",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Baltimore Ravens",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -263
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 195
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -280
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 210
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:54:05Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:54:05Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -750
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 450
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -240
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 180
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:55:01Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:55:01Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -500
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 350
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:57:18Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:18Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -272
+              },
+              {
+                "name": "Dallas Cowboys",
+                "price": 225
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      }
+    ],
+    "commence_time": "2026-09-27T20:25:38Z",
+    "home_team": "Dallas Cowboys",
+    "id": "84cfca14efc21363fd605508404cf1ff",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Los Angeles Rams",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -105
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -115
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "betus",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": 100
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -120
+              }
+            ]
+          }
+        ],
+        "title": "BetUS"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -102
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -116
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -107
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -114
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "lowvig",
+        "last_update": "2026-09-27T22:58:49Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:49Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -105
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -115
+              }
+            ]
+          }
+        ],
+        "title": "LowVig.ag"
+      },
+      {
+        "key": "betonlineag",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -105
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -115
+              }
+            ]
+          }
+        ],
+        "title": "BetOnline.ag"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": 101
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -118
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betmgm",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -105
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -115
+              }
+            ]
+          }
+        ],
+        "title": "BetMGM"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:58:37Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:37Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -105
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -115
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:58:49Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:49Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": -102
+              },
+              {
+                "name": "Los Angeles Rams",
+                "price": -108
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      }
+    ],
+    "commence_time": "2026-09-28T00:20:00Z",
+    "home_team": "Denver Broncos",
+    "id": "3bfd8bfb4b8e9a365a0877879b73b16b",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Philadelphia Eagles",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -205
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 176
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -210
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -210
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "betus",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -200
+              }
+            ]
+          }
+        ],
+        "title": "BetUS"
+      },
+      {
+        "key": "lowvig",
+        "last_update": "2026-09-27T22:58:49Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:49Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 174
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -200
+              }
+            ]
+          }
+        ],
+        "title": "LowVig.ag"
+      },
+      {
+        "key": "betonlineag",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 174
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -200
+              }
+            ]
+          }
+        ],
+        "title": "BetOnline.ag"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -212
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betmgm",
+        "last_update": "2026-09-27T22:58:19Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:19Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -210
+              }
+            ]
+          }
+        ],
+        "title": "BetMGM"
+      },
+      {
+        "key": "bovada",
+        "last_update": "2026-09-27T22:58:37Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:37Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 170
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -200
+              }
+            ]
+          }
+        ],
+        "title": "Bovada"
+      },
+      {
+        "key": "pinnacle",
+        "last_update": "2026-09-27T22:58:49Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:49Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": 175
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": -197
+              }
+            ]
+          }
+        ],
+        "title": "Pinnacle"
+      }
+    ],
+    "commence_time": "2026-09-29T00:15:00Z",
+    "home_team": "Chicago Bears",
+    "id": "47dc7baa254659f3beb2ed2b38c207b6",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Pittsburgh Steelers",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Cleveland Browns",
+                "price": 124
+              },
+              {
+                "name": "Pittsburgh Steelers",
+                "price": -148
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Cleveland Browns",
+                "price": 116
+              },
+              {
+                "name": "Pittsburgh Steelers",
+                "price": -136
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Cleveland Browns",
+                "price": 116
+              },
+              {
+                "name": "Pittsburgh Steelers",
+                "price": -148
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Cleveland Browns",
+                "price": 125
+              },
+              {
+                "name": "Pittsburgh Steelers",
+                "price": -152
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-02T00:15:00Z",
+    "home_team": "Cleveland Browns",
+    "id": "d55cb69fed50a09170560b5b75d8de86",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Indianapolis Colts",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Indianapolis Colts",
+                "price": -192
+              },
+              {
+                "name": "Washington Commanders",
+                "price": 160
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Indianapolis Colts",
+                "price": -205
+              },
+              {
+                "name": "Washington Commanders",
+                "price": 172
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Indianapolis Colts",
+                "price": -206
+              },
+              {
+                "name": "Washington Commanders",
+                "price": 159
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Indianapolis Colts",
+                "price": -200
+              },
+              {
+                "name": "Washington Commanders",
+                "price": 165
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T13:30:00Z",
+    "home_team": "Washington Commanders",
+    "id": "c9d8ed8aa4889486eaf10a630138ede0",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Arizona Cardinals",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 114
+              },
+              {
+                "name": "New York Giants",
+                "price": -135
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 114
+              },
+              {
+                "name": "New York Giants",
+                "price": -134
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Arizona Cardinals",
+                "price": 112
+              },
+              {
+                "name": "New York Giants",
+                "price": -136
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "New York Giants",
+    "id": "664e6bda5721dc63be16bcf7d962a436",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Tennessee Titans",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -750
+              },
+              {
+                "name": "Tennessee Titans",
+                "price": 525
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -770
+              },
+              {
+                "name": "Tennessee Titans",
+                "price": 540
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Baltimore Ravens",
+                "price": -715
+              },
+              {
+                "name": "Tennessee Titans",
+                "price": 500
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Baltimore Ravens",
+    "id": "f01589b0e7e6dd4f4ac1220a1db81f53",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "New England Patriots",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Buffalo Bills",
+                "price": -298
+              },
+              {
+                "name": "New England Patriots",
+                "price": 240
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Buffalo Bills",
+                "price": -330
+              },
+              {
+                "name": "New England Patriots",
+                "price": 265
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Buffalo Bills",
+                "price": -335
+              },
+              {
+                "name": "New England Patriots",
+                "price": 255
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Buffalo Bills",
+                "price": -319
+              },
+              {
+                "name": "New England Patriots",
+                "price": 232
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Buffalo Bills",
+    "id": "573cc0ef39631a4f6673ec843a8bedd4",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "New York Jets",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": -148
+              },
+              {
+                "name": "New York Jets",
+                "price": 124
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": -174
+              },
+              {
+                "name": "New York Jets",
+                "price": 148
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": -159
+              },
+              {
+                "name": "New York Jets",
+                "price": 130
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Chicago Bears",
+                "price": -166
+              },
+              {
+                "name": "New York Jets",
+                "price": 130
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Chicago Bears",
+    "id": "164e6eb68f31bac190381903c3cccd31",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Jacksonville Jaguars",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Cincinnati Bengals",
+                "price": -135
+              },
+              {
+                "name": "Jacksonville Jaguars",
+                "price": 114
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Cincinnati Bengals",
+                "price": -130
+              },
+              {
+                "name": "Jacksonville Jaguars",
+                "price": 110
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Cincinnati Bengals",
+                "price": -148
+              },
+              {
+                "name": "Jacksonville Jaguars",
+                "price": 114
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Cincinnati Bengals",
+                "price": -141
+              },
+              {
+                "name": "Jacksonville Jaguars",
+                "price": 111
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Cincinnati Bengals",
+    "id": "2ea94ddf20f66432b9024fe2e2eaba5f",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Dallas Cowboys",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Dallas Cowboys",
+                "price": 114
+              },
+              {
+                "name": "Houston Texans",
+                "price": -135
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Dallas Cowboys",
+                "price": 104
+              },
+              {
+                "name": "Houston Texans",
+                "price": -122
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Dallas Cowboys",
+                "price": 114
+              },
+              {
+                "name": "Houston Texans",
+                "price": -137
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Houston Texans",
+    "id": "daf55e2df5341c007fee5a0fc5bbc2d4",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Green Bay Packers",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Green Bay Packers",
+                "price": 110
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": -130
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Green Bay Packers",
+                "price": 110
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": -130
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Green Bay Packers",
+                "price": 110
+              },
+              {
+                "name": "Tampa Bay Buccaneers",
+                "price": -134
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Tampa Bay Buccaneers",
+    "id": "99a9bae4dc0dc2590496bd3102b211f2",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Los Angeles Rams",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Rams",
+                "price": -135
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": 114
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Rams",
+                "price": -152
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": 128
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Rams",
+                "price": -141
+              },
+              {
+                "name": "Philadelphia Eagles",
+                "price": 117
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T17:00:00Z",
+    "home_team": "Philadelphia Eagles",
+    "id": "1b4f2e60ce83fa1d63a5dff83769d27c",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Miami Dolphins",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Miami Dolphins",
+                "price": 550
+              },
+              {
+                "name": "Minnesota Vikings",
+                "price": -800
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Miami Dolphins",
+                "price": 420
+              },
+              {
+                "name": "Minnesota Vikings",
+                "price": -560
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Miami Dolphins",
+                "price": 450
+              },
+              {
+                "name": "Minnesota Vikings",
+                "price": -625
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T20:05:00Z",
+    "home_team": "Minnesota Vikings",
+    "id": "c327223d76a3b7b0db8c6c104442f44b",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Denver Broncos",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": 140
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -166
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": 130
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -154
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Denver Broncos",
+                "price": 128
+              },
+              {
+                "name": "San Francisco 49ers",
+                "price": -155
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T20:25:00Z",
+    "home_team": "San Francisco 49ers",
+    "id": "a7e7efb75a9792ac63480ae6328dca18",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Kansas City Chiefs",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Kansas City Chiefs",
+                "price": -258
+              },
+              {
+                "name": "Las Vegas Raiders",
+                "price": 210
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Kansas City Chiefs",
+                "price": -240
+              },
+              {
+                "name": "Las Vegas Raiders",
+                "price": 198
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Kansas City Chiefs",
+                "price": -250
+              },
+              {
+                "name": "Las Vegas Raiders",
+                "price": 200
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-04T20:25:00Z",
+    "home_team": "Las Vegas Raiders",
+    "id": "e0cbd266dcf997089203a1b33ba0333d",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Los Angeles Chargers",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Chargers",
+                "price": 240
+              },
+              {
+                "name": "Seattle Seahawks",
+                "price": -298
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Chargers",
+                "price": 270
+              },
+              {
+                "name": "Seattle Seahawks",
+                "price": -335
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Chargers",
+                "price": 255
+              },
+              {
+                "name": "Seattle Seahawks",
+                "price": -335
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Los Angeles Chargers",
+                "price": 232
+              },
+              {
+                "name": "Seattle Seahawks",
+                "price": -310
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      }
+    ],
+    "commence_time": "2026-10-04T20:25:00Z",
+    "home_team": "Seattle Seahawks",
+    "id": "96d2373cda647873b971f268482bced0",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Detroit Lions",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Carolina Panthers",
+                "price": 130
+              },
+              {
+                "name": "Detroit Lions",
+                "price": -155
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Carolina Panthers",
+                "price": 130
+              },
+              {
+                "name": "Detroit Lions",
+                "price": -154
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Carolina Panthers",
+                "price": 130
+              },
+              {
+                "name": "Detroit Lions",
+                "price": -159
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      },
+      {
+        "key": "mybookieag",
+        "last_update": "2026-09-27T22:57:04Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:57:04Z",
+            "outcomes": [
+              {
+                "name": "Carolina Panthers",
+                "price": 125
+              },
+              {
+                "name": "Detroit Lions",
+                "price": -160
+              }
+            ]
+          }
+        ],
+        "title": "MyBookie.ag"
+      }
+    ],
+    "commence_time": "2026-10-05T00:20:00Z",
+    "home_team": "Carolina Panthers",
+    "id": "a73a76599a4f3422803e57bd8f61b626",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  },
+  {
+    "away_team": "Atlanta Falcons",
+    "bookmakers": [
+      {
+        "key": "draftkings",
+        "last_update": "2026-09-27T22:58:48Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:48Z",
+            "outcomes": [
+              {
+                "name": "Atlanta Falcons",
+                "price": 124
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -148
+              }
+            ]
+          }
+        ],
+        "title": "DraftKings"
+      },
+      {
+        "key": "fanduel",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Atlanta Falcons",
+                "price": 126
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -148
+              }
+            ]
+          }
+        ],
+        "title": "FanDuel"
+      },
+      {
+        "key": "betrivers",
+        "last_update": "2026-09-27T22:58:50Z",
+        "markets": [
+          {
+            "key": "h2h",
+            "last_update": "2026-09-27T22:58:50Z",
+            "outcomes": [
+              {
+                "name": "Atlanta Falcons",
+                "price": 128
+              },
+              {
+                "name": "New Orleans Saints",
+                "price": -157
+              }
+            ]
+          }
+        ],
+        "title": "BetRivers"
+      }
+    ],
+    "commence_time": "2026-10-06T00:15:00Z",
+    "home_team": "New Orleans Saints",
+    "id": "8bd90781e17e6d97df3941063cedae1e",
+    "sport_key": "americanfootball_nfl",
+    "sport_title": "NFL"
+  }
+]
