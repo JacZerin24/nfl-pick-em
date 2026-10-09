@@ -1,0 +1,47 @@
+name: Track L FTN Scheme Matchups
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/track-l-scheme-matchups
+    paths:
+      - scripts/track_l_ftn_scheme_matchups.py
+      - tests/test_track_l_ftn_scheme_matchups.py
+      - research/track_l_ftn_scheme_matchups.md
+      - .github/workflows/track-l-ftn-scheme-matchups.yml
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout research branch
+      - uses: actions/setup-python@v5
+        name: Setup Python
+        with:
+          python-version: '3.11'
+      - name: Install research dependencies
+        run: python -m pip install --upgrade pip && pip install -e . pytest
+      - name: Validate join and as-of leakage invariants
+        run: PYTHONPATH=scripts python -m pytest -q tests/test_track_l_ftn_scheme_matchups.py
+      - name: Run previously studied historical scheme experiment
+        run: python -u scripts/track_l_ftn_scheme_matchups.py
+      - name: Append results to job summary
+        if: always()
+        run: |
+          if [[ -f outputs/track_l_scheme_matchups/summary.md ]]; then
+            cat outputs/track_l_scheme_matchups/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload research outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-l-ftn-scheme-results
+          path: outputs/track_l_scheme_matchups/
+          if-no-files-found: warn
+          retention-days: 90
