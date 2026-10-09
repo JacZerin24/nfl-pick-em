@@ -183,10 +183,27 @@ def fit_market_residual(
         grad[1:] += RIDGE_PENALTY * theta[1:]
         return loss, grad
 
-    result = minimize(objective, np.zeros(design.shape[1]), jac=True, method="L-BFGS-B",
-                      options={"maxiter": 250})
+    init = np.zeros(design.shape[1])
+    if not np.isfinite(design).all() or not np.isfinite(prior).all() or not np.isfinite(y).all():
+        raise ValueError("Non-finite input reached penalized residual optimizer")
+    result = minimize(objective, init, jac=True, method="L-BFGS-B",
+                      options={"maxiter": 600, "maxls": 40, "ftol": 1e-10})
     if not result.success:
-        raise RuntimeError(f"Residual ridge optimizer did not converge: {result.message}")
+        # Same objective, alternative numerical solver for collinearity.
+        start = result.x if np.isfinite(result.x).all() else init
+        alternative = minimize(objective, start, jac=True, method="BFGS",
+                               options={"maxiter": 600, "gtol": 1e-6})
+        if alternative.success or (
+            np.isfinite(alternative.fun) and
+            np.max(np.abs(objective(alternative.x)[1])) <= 1e-5
+        ):
+            result = alternative
+        else:
+            raise RuntimeError(
+                f"Residual optimizer failed: LBFGS={result.message}, "
+                f"BFGS={alternative.message}, gradient_max="
+                f"{np.max(np.abs(objective(alternative.x)[1])):.4g}"
+            )
     market_test = np.clip(test["market_home_prob"].to_numpy(float), 1e-5, 1 - 1e-5)
     prior_test = np.log(market_test / (1 - market_test))
     return expit(prior_test + np.column_stack((np.ones(len(z)), z)) @ result.x)
