@@ -102,3 +102,33 @@ probabilities before any new production version is considered.
 
 Results go to outputs/track_k_comprehensive_matchups and a GitHub Actions
 artifact. No output commits, production retuning, or live updates occur.
+
+## Completed exploratory result — October 9, 2026
+
+[Successful full research run](https://github.com/JacZerin24/nfl-pick-em/actions/runs/37884376047):
+four deterministic unit tests passed, historical run completed, results saved as
+an Actions artifact. Reused historical 2019–2025 regular-season diagnostics
+include 1,865 games:
+
+| Variant | Correct | Net vs market |
+|---|---:|---:|
+| Closing market | 1,238 | 0 |
+| New numerical core baseline | 1,238 | 0 |
+| Core + situational efficiency | 1,239 | +1 |
+| Core + opponent-relative efficiency | 1,238 | 0 |
+| Core + expanded matchup products | 1,240 | +2 |
+| Core + all new feature groups | 1,238 | 0 |
+
+The matchup-only variant flipped **two** historical picks compared with
+the core research model and won both. The exact paired McNemar p-value
+is **0.50**, providing no statistically convincing evidence of improvement.
+The fully combined model was unchanged in total wins relative to market
+and core. Season-block intervals are only descriptive, especially with
+few disagreements; a 0 lower bound in a highly discrete two-win
+sample is not confirmatory.
+
+**Decision:** Do not promote these variants. The study provides useful
+feature engineering and coverage diagnostics, but no persuasive
+incremental accuracy benefit. The exact 2026 incumbent architecture
+was not evaluated here. The next planned distinct test is primetime,
+game-slot, and scheduling dynamics, with defensible event-time sources.
