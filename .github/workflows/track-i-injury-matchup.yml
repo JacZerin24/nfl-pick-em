@@ -1,0 +1,51 @@
+name: Track I Injury Opponent Matchups
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/track-i-injury-matchup
+    paths:
+      - scripts/track_i_injury_matchup_interactions.py
+      - tests/test_track_i_injury_matchup.py
+      - .github/workflows/track-i-injury-matchup.yml
+      - research/track_i_injury_matchup_protocol.md
+
+permissions:
+  contents: read
+
+jobs:
+  historical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout research branch
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install project and pytest
+        run: python -m pip install --upgrade pip && pip install -e . pytest
+      - name: Unit-test matchup directionality and paired metrics
+        run: PYTHONPATH=scripts python -m pytest -q tests/test_track_i_injury_matchup.py
+      - name: Run historical exploratory walk-forward study
+        run: |
+          python scripts/track_i_injury_matchup_interactions.py \
+            --start-season 2012 --end-season 2024 \
+            --first-test-season 2016 --holdout-start-season 2019 \
+            --output-dir outputs/track_i_injury_matchup
+      - name: Attach results to workflow summary
+        if: always()
+        run: |
+          if [[ -f outputs/track_i_injury_matchup/summary.md ]]; then
+            cat outputs/track_i_injury_matchup/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload research outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-i-injury-matchup-${{ github.run_id }}
+          path: outputs/track_i_injury_matchup/
+          if-no-files-found: warn
+          retention-days: 90
