@@ -24,9 +24,11 @@ class PrimetimeTests(unittest.TestCase):
 
     def example(self):
         rows=[]
-        for i, day in enumerate(("2019-09-12","2019-09-19","2019-09-26","2019-10-03"),1):
+        slots = (("2019-09-12","20:20"),("2019-09-15","13:00"),
+                 ("2019-09-19","20:20"),("2019-09-26","20:20"))
+        for i, (day, clock) in enumerate(slots,1):
             rows.append({"game_id":f"G{i}","season":2019,"week":i,
-                         "gameday":day,"gametime":"20:20",
+                         "gameday":day,"gametime":clock,
                          "home_team":"AAA","away_team":"BBB",
                          "home_win":float(i%2==1),"market_home_prob":.65})
         return slot_labels(pd.DataFrame(rows))
