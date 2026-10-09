@@ -85,3 +85,52 @@ python scripts/track_m_participation_matchups.py
 
 Output artifacts are stored under outputs/track_m_participation/
 and preserved via Actions. No files are committed to main.
+
+## Completed exploratory result — October 9, 2026
+
+[Validated Actions run 37907631095](https://github.com/JacZerin24/nfl-pick-em/actions/runs/37907631095)
+passed 5 network-free tests and completed historical matched-game,
+rolling-as-of and consensus scoring. The source audit found important
+man-zone label normalization: **MAN_COVERAGE** and **ZONE_COVERAGE**,
+rather than the generic MAN and ZONE tokens; the parser and synthetic
+tests were corrected before accepting results.
+
+**Provider-field coverage:** man/zone labels were unpopulated in
+2016–2017, then charted for 2018–2025. In the 2023–2025
+regular-season source audit there were 21,788 / 21,402 /
+20,966 charted man/zone pass plays respectively, along with
+pressure and route fields. The latter are retrospective and
+2023+ releases are post-season, so do not mistake this for a
+current 2026 live coverage feed.
+
+In the previously inspected 2024–2025 favorite 52.5%–under-80%
+domain of **453 eligible games**:
+
+| Consensus variant | Correct | Net vs market |
+|---|---:|---:|
+| Market favorite | 302 | 0 |
+| Frozen-style original full-history matchup + variance | 306 | +4 |
+| Same-era team-only + variance | **308** | **+6** |
+| Same-era team + coverage and pressure main effects | 307 | +5 |
+| Same-era team + man/zone/pressure/route interactions | 307 | +5 |
+
+**Incremental finding:** Adding coverage-pressure variables reduced
+same-era team-only consensus by **one** correct pick; adding
+explicit coverage interaction products beyond the already enhanced
+coverage-main model changed **zero** winner selections.
+The interaction variant versus the established full-history
+incumbent gained only **one** correct pick across 453 games
+(1–0 disagreement; exact McNemar p=1.00).
+
+The same-era team-only advantage of +2 vs the historical incumbent
+is a training-method/window difference, not a man-zone effect.
+Raw missingness across 2024–2025 predictions was ~0.02% for
+coverage-main features and ~0.06% for interaction products.
+
+**Decision: Do not promote.** This particular historical man/zone,
+pressure, route, and opponent matchup design does not demonstrate
+a repeatable incremental edge, nor availability for live 2026.
+A true named player one-on-one matchup needs different direct
+coverage-assignment or line-blocking evidence and timestamped
+expected pregame personnel, rather than simply two athletes
+appearing on the field on a historical play.
