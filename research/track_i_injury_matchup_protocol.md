@@ -108,3 +108,28 @@ Historical exploratory experiment:
     python scripts/track_i_injury_matchup_interactions.py
 
 Outputs: outputs/track_i_injury_matchup/{predictions.csv,by_season.csv,paired_comparisons.csv,diagnostics.csv,features.txt,summary.md}.
+
+## Completed exploratory result (GitHub Actions run 37882214302)
+
+The 2009-2025 era material is not used here; this experiment specifically
+used historical injury and snap data through 2024. In the reused 2019-2024
+holdout of **1,594** regular-season games:
+
+| Research variant | Correct | Net versus broad injury |
+|---|---:|---:|
+| Closing market | 1,061 | -13 |
+| Broad injury control | **1,074** | 0 |
+| Broad + position gap | 1,056 | -18 |
+| Broad + position gap + opponent-strength interaction | 1,056 | -18 |
+
+The additional interaction features changed 26 picks relative to the
+position-gap model; the interaction version won **13** and lost **13**.
+Thus this first group-level opponent vulnerability implementation showed
+**zero incremental correct picks** beyond the position model and performed
+worse than the simpler broad injury controls.
+
+These are **exploratory**, previously examined historical games; there is
+no evidence here to promote Track I. A more granular true player-vs-player
+injury/coverage/pressure hypothesis requires timestamped future data and an
+independently frozen prospective test. Research output was preserved as
+GitHub Actions artifact on run 37882214302. Production remains unchanged.
