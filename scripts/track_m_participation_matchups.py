@@ -209,6 +209,10 @@ def main():
     base=build_model_table(2009,2025)
     print("Loading NFL Next Gen Stats/FTN participation since 2016...",flush=True)
     part=nfl.load_participation(CHART_YEARS).to_pandas()
+    print("RAW man/zone field values (including missing):",flush=True)
+    print(part["defense_man_zone_type"].astype("string").value_counts(dropna=False).head(15).to_string(),flush=True)
+    print("RAW coverage-shell field values (including missing):",flush=True)
+    print(part["defense_coverage_type"].astype("string").value_counts(dropna=False).head(15).to_string(),flush=True)
     pbp=nfl.load_pbp(CHART_YEARS)
     use_pbp=["game_id","play_id","posteam","defteam","epa","pass","rush"]
     plays,join_stats=join_participation(part,pbp.select(use_pbp).to_pandas())
