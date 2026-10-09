@@ -43,7 +43,7 @@ class TrackLSchemeTests(unittest.TestCase):
 
     def test_duplicate_chart_play_is_rejected(self):
         ftn, pbp = self.rows()
-        bad = pd.concat([ftn, ftn.head(1).assign(is_motion=False)], ignore_index=True)
+        bad = pd.concat([ftn, ftn.head(1).assign(is_motion=True)], ignore_index=True)
         with self.assertRaisesRegex(ValueError, "duplicate FTN"):
             join_ftn_pbp(bad, pbp)
 
