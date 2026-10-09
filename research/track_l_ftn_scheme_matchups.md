@@ -98,3 +98,46 @@ python scripts/track_l_ftn_scheme_matchups.py
 
 GitHub Actions stores per-game predictions, consensus accuracy, paired
 changes and coverage under outputs/track_l_scheme_matchups.
+
+## Completed exploratory historical diagnostic — October 9, 2026
+
+[Actions run 37906394799](https://github.com/JacZerin24/nfl-pick-em/actions/runs/37906394799)
+completed successfully: all **five** deterministic tests passed, matched
+FTN chart/PBP inputs and trained all predefined matchup+variance
+consensus variants. Six result files were archived as a workflow artifact.
+
+The **453** eligible games were 238 in 2024 and 215 in 2025.
+The 52.5%-under-80% market-favorite range was held constant.
+
+| Variant | Correct | Consensus upset calls | Correct upset calls | Net vs market |
+|---|---:|---:|---:|---:|
+| Market favorite | 302 | 0 | 0 | 0 |
+| Full-history current matchup + variance | **306** | 8 | 6 | +4 |
+| Same-era team-only + variance | 304 | 2 | 2 | +2 |
+| Same-era team + charted scheme rates | 305 | 3 | 3 | +3 |
+| Same-era team + scheme rate/conditional EPA | 306 | 4 | 4 | +4 |
+| Same-era team + rates/EPA/interaction products | **308** | 6 | 6 | **+6** |
+
+All-scheme versus current full-history consensus changed **8** picks:
+**5 correct, 3 incorrect**, a +2 net accuracy difference. Exact paired
+McNemar p = **0.727**. It is **not statistically compelling** and does not
+survive the prior multiple-track/selection burden.
+
+The all-scheme standalone underdog probability Brier was **0.236** and
+log loss **0.672**, compared with current matchup specialist Brier
+**0.222**, log loss **0.639**. Despite two more correct consensus picks,
+scheme probabilities were materially worse by these scoring measures.
+
+Raw missing-feature rate in the test cohort was **0%** for usage rates,
+**12.2%** for conditional EPA, and **19.3%** for interaction products.
+Model-level medians were fitted only on the appropriate training period.
+
+**Decision:** Do not change the operational 2026 model. The small,
+retrospective +2 result is a hypothesis for future preregistered
+prospective validation, **not** a demonstrated edge. The existing
+full-history model also benefits from historical training starting
+2009, whereas new FTN features only start 2022, so direct model
+comparison contains training-length differences. A live opponent
+scheme/missing-player interaction model requires validated player IDs,
+expected roles, reliable matchup sources, exact as-of injury information
+and as-of odds before it can be shadow-scored.
