@@ -17,7 +17,7 @@ class TrackMTests(unittest.TestCase):
                 team="AAA" if play%2 else "BBB"
                 part.append({
                     "nflverse_game_id":f"G{week}","play_id":play,
-                    "defense_man_zone_type":"MAN" if play%4<2 else "ZONE",
+                    "defense_man_zone_type":"MAN_COVERAGE" if play%4<2 else "ZONE_COVERAGE",
                     "defense_coverage_type":"COVER_1" if play%4<2 else "COVER_2",
                     "was_pressure":bool(play%3==0),
                     "route":"GO" if play%5==0 else "SLANT",
