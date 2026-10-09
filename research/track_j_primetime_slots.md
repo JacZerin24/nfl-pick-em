@@ -89,3 +89,31 @@ odds/picks, before any new model is promoted.
 
 Artifacts: outputs/track_j_primetime/ (predictions, per-slot metrics,
 feature registry, paired comparisons and summary).
+
+## Completed historical diagnostic — October 9, 2026
+
+[Successful GitHub Actions research run](https://github.com/JacZerin24/nfl-pick-em/actions/runs/37884721885)
+completed 4 unit tests and expanding-season backtests. The previously
+examined 2019–2025 holdout contains **1,865 games**:
+
+| Variant | Correct | Net vs market | Net vs control |
+|---|---:|---:|---:|
+| Market | 1,238 | 0 | -7 |
+| Market + Elo/rest/total/division control | **1,245** | +7 | 0 |
+| Control + kickoff-slot indicators | 1,238 | 0 | -7 |
+| Control + team slot history | 1,236 | -2 | -9 |
+| Control + slot/rest interactions | 1,240 | +2 | -5 |
+| Control + all slot features | 1,238 | 0 | -7 |
+
+Relative to the control model, the slot-only challenger won **6** and
+lost **13** on changed historical decisions (exact paired McNemar
+p = 0.167). The all-features challenger won **10** and lost **17**
+(p = 0.248), also worse. These data do **not** justify adding
+primetime- or slot-based pick weights to the 2026 production model.
+
+The control's +7 advantage over the market itself is small
+(McNemar p = 0.189) and not independent confirmation. Neither this
+control nor any slot challenger is the frozen production system.
+A true branded-TNF/SNF/MNF study requires validated broadcast tags,
+original/flexed schedule provenance, and a separate, untouched
+prospective comparison. Results remain research-only.
