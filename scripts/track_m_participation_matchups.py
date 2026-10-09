@@ -24,7 +24,7 @@ from live_pickem import build_variance_training, make_variance_catboost
 
 OUT = Path("outputs/track_m_participation")
 CHART_YEARS = list(range(2016, 2026))
-TEST_YEARS = (2023, 2024, 2025)
+TEST_YEARS = (2024, 2025)
 WINDOWS = (4, 8)
 MIN_SAMPLE = 3
 COVERAGE_METRICS = (
@@ -72,8 +72,10 @@ def join_participation(part: pd.DataFrame, pbp: pd.DataFrame) -> tuple[pd.DataFr
     q = q.loc[pd.to_numeric(q["pass"], errors="coerce").eq(1) &
               q["posteam"].notna() & q["defteam"].notna() & q["epa"].notna()].copy()
     typ = q["defense_man_zone_type"].astype(str).str.upper().str.strip()
-    q["man"] = typ.eq("MAN")
-    q["zone"] = typ.eq("ZONE")
+    # The released feed uses MAN_COVERAGE and ZONE_COVERAGE, not only
+    # the dictionary's generic man/zone description.
+    q["man"] = typ.isin(["MAN", "MAN_COVERAGE"])
+    q["zone"] = typ.isin(["ZONE", "ZONE_COVERAGE"])
     q["valid_coverage"] = q["man"] | q["zone"]
     cp = q["defense_coverage_type"].astype(str).str.upper().str.strip()
     q["two_deep"] = cp.isin(["COVER_2", "2_MAN", "COVER_4", "COVER_6"])
@@ -226,7 +228,11 @@ def main():
         pressure_plays=("def_pressure_charted_n","sum"),
         route_plays=("off_route_charted_n","sum"),
     ).reset_index()
+    source_year=source_year.loc[source_year["season"].notna()].copy()
     source_year.to_csv(args.output_dir/"source_coverage_by_year.csv",index=False)
+    recent_coverage=source_year.loc[source_year["season"].isin([2023,2024,2025]),"coverage_plays"].sum()
+    if recent_coverage < 10000:
+        raise RuntimeError("Man/zone charting insufficient for a legitimate historical coverage test")
     base=roll_teams(base,summary)
     upset,features=build_upset_table(base)
     upset,additional=add_coverage_matchups(upset)
@@ -277,7 +283,12 @@ def main():
         scores.append({"model":name,"games":len(x),"correct":int((call==y).sum()),
                        "upset_calls":int(call.sum()),"correct_upsets":int(np.sum(y[call]))})
     score_df=pd.DataFrame(scores)
-    pairs=pd.DataFrame([compare_consensus(x,k,"team_full_history") for k in variants])
+    pairs=pd.DataFrame(
+        [compare_consensus(x,k,"team_full_history") for k in variants]
+        + [compare_consensus(x,"coverage_main","same_era_team"),
+           compare_consensus(x,"coverage_interaction","coverage_main"),
+           compare_consensus(x,"coverage_interaction","same_era_team")]
+    )
     score_df.to_csv(args.output_dir/"consensus_scores.csv",index=False)
     pairs.to_csv(args.output_dir/"paired_tests.csv",index=False)
     cohort=upset.loc[upset.season.isin(TEST_YEARS)]
@@ -293,7 +304,7 @@ def main():
         "features enter *later* games only through shifted histories.",
         "Source season-by-season coverage audit is mandatory: do not assume",
         "all coverage and route fields are populated uniformly.","",
-        "## Reused 2023–2025 historical upset-domain consensus results","",
+        "## Reused 2024–2025 historical upset-domain consensus results","",
         score_df.to_markdown(index=False),"",
         "## Paired changes vs existing matchup+variance consensus","",
         pairs.to_markdown(index=False,floatfmt=".4f"),"",
