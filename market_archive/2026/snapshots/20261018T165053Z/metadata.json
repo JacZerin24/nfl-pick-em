@@ -1,0 +1,14 @@
+{
+  "bookmaker_rows_written": 64,
+  "bookmakers_requested": "pinnacle,draftkings,fanduel,betmgm,betrivers,betonlineag,bovada,betus,lowvig,mybookieag",
+  "events_returned": 23,
+  "markets": "h2h",
+  "quota_last": "1",
+  "quota_remaining": "259",
+  "quota_used": "241",
+  "research_only": true,
+  "snapshot_role": "NEAR_KICKOFF_H2H",
+  "snapshot_utc": "2026-10-18T16:50:53Z",
+  "source": "the-odds-api-v4",
+  "sport_key": "americanfootball_nfl"
+}
