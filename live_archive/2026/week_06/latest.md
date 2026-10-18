@@ -1,8 +1,8 @@
 # NFL Pick'em — 2026 Week 6
 
-Snapshot UTC: `2026-10-18T11:39:10Z`
+Snapshot UTC: `2026-10-18T13:18:01Z`
 Model: `prospective-v1-frozen-2025`
-Snapshot role: **UPDATE**
+Snapshot role: **FINAL_ENTRY** — official entry snapshot
 
 Frozen 2026 rules: market anchor; residual only for <52.5% tossups; true underdog only when matchup-logistic and variance-CatBoost agree; 80%+ favorite remains the market pick.
 
