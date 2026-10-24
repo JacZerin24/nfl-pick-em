@@ -1,0 +1,47 @@
+name: Track M Participation Coverage Matchups
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/track-m-participation-coverage
+    paths:
+      - scripts/track_m_participation_matchups.py
+      - tests/test_track_m_participation_matchups.py
+      - research/track_m_participation_matchups.md
+      - .github/workflows/track-m-participation-coverage.yml
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout research branch
+      - uses: actions/setup-python@v5
+        name: Setup Python
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -e . pytest
+      - name: Test participation join, past-only history, symmetric interaction
+        run: PYTHONPATH=scripts python -m pytest -q tests/test_track_m_participation_matchups.py
+      - name: Run historical participation and incumbent consensus test
+        run: python -u scripts/track_m_participation_matchups.py
+      - name: Show historical source coverage and results
+        if: always()
+        run: |
+          if [[ -f outputs/track_m_participation/summary.md ]]; then
+            cat outputs/track_m_participation/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Archive research-only artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-m-participation-results
+          path: outputs/track_m_participation/
+          retention-days: 90
+          if-no-files-found: warn
