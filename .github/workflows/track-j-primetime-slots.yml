@@ -1,0 +1,47 @@
+name: Track J Primetime and Scheduling Slots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/track-j-primetime-scheduling
+    paths:
+      - scripts/track_j_primetime_slots.py
+      - tests/test_track_j_primetime_slots.py
+      - research/track_j_primetime_slots.md
+      - .github/workflows/track-j-primetime-slots.yml
+
+permissions:
+  contents: read
+
+jobs:
+  historical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout research branch
+      - uses: actions/setup-python@v5
+        name: Setup Python
+        with:
+          python-version: '3.11'
+      - name: Install project and tests
+        run: python -m pip install --upgrade pip && pip install -e . pytest
+      - name: Test slot classifications and prior-history leakage
+        run: PYTHONPATH=scripts python -m pytest -q tests/test_track_j_primetime_slots.py
+      - name: Run kickoff-slot historical research
+        run: python scripts/track_j_primetime_slots.py --start-season 2009 --end-season 2025 --first-test-season 2016 --holdout-season 2019
+      - name: Add summary
+        if: always()
+        run: |
+          if [[ -f outputs/track_j_primetime/summary.md ]]; then
+            cat outputs/track_j_primetime/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-j-primetime-results
+          path: outputs/track_j_primetime/
+          if-no-files-found: warn
+          retention-days: 90
