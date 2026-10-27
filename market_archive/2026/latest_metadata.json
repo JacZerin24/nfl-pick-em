@@ -1,14 +1,14 @@
 {
-  "bookmaker_rows_written": 123,
+  "bookmaker_rows_written": 140,
   "bookmakers_requested": "pinnacle,draftkings,fanduel,betmgm,betrivers,betonlineag,bovada,betus,lowvig,mybookieag",
   "events_returned": 14,
   "markets": "h2h,spreads,totals",
   "quota_last": "3",
-  "quota_remaining": "136",
-  "quota_used": "364",
+  "quota_remaining": "131",
+  "quota_used": "369",
   "research_only": true,
   "snapshot_role": "SCHEDULED_FULL",
-  "snapshot_utc": "2026-10-27T07:46:26Z",
+  "snapshot_utc": "2026-10-27T15:51:29Z",
   "source": "the-odds-api-v4",
   "sport_key": "americanfootball_nfl"
 }
