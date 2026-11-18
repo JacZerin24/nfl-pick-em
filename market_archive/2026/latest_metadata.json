@@ -4,11 +4,11 @@
   "events_returned": 29,
   "markets": "h2h,spreads,totals",
   "quota_last": "3",
-  "quota_remaining": "277",
-  "quota_used": "223",
+  "quota_remaining": "273",
+  "quota_used": "227",
   "research_only": true,
   "snapshot_role": "SCHEDULED_FULL",
-  "snapshot_utc": "2026-11-18T10:04:26Z",
+  "snapshot_utc": "2026-11-18T18:49:41Z",
   "source": "the-odds-api-v4",
   "sport_key": "americanfootball_nfl"
 }
