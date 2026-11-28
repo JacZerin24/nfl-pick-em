@@ -1,9 +1,9 @@
 # 2026 NFL Pick'em Prospective Scoreboard
 
-Official scored games: **166** (+ 1 tie excluded)
+Official scored games: **167** (+ 1 tie excluded)
 
-- Model: **112-54 (67.5%)**
-- Market favorite: **111-55 (66.9%)**
+- Model: **112-55 (67.1%)**
+- Market favorite: **111-56 (66.5%)**
 - Net correct picks vs market: **+1**
 
 ## By decision type
@@ -12,7 +12,7 @@ Official scored games: **166** (+ 1 tie excluded)
 |---|---:|---:|---:|---:|
 | CLOSE_MARKET_ALIGNED | 7 | 3-4 | 42.9% | +0 |
 | CLOSE_RESIDUAL | 1 | 1-0 | 100.0% | +1 |
-| FOLLOW_MARKET | 156 | 107-49 | 68.6% | +0 |
+| FOLLOW_MARKET | 157 | 107-50 | 68.2% | +0 |
 | TRUE_UPSET_CONSENSUS | 2 | 1-1 | 50.0% | +0 |
 
 ## By week
@@ -30,10 +30,10 @@ Official scored games: **166** (+ 1 tie excluded)
 | 9 | 15 | 14-1 | 14-1 | +0 |
 | 10 | 14 | 9-5 | 9-5 | +0 |
 | 11 | 13 | 9-4 | 9-4 | +0 |
-| 12 | 4 | 3-1 | 3-1 | +0 |
+| 12 | 5 | 3-2 | 3-2 | +0 |
 
 ## Audit rule
 
-Official-entry snapshots used: **150/166**.
+Official-entry snapshots used: **150/167**.
 
 For each game, grading prefers the latest timestamped FINAL_ENTRY or FALLBACK_ENTRY snapshot archived before kickoff. If no such role exists for an older game, grading falls back to the latest pre-kick snapshot. The frozen 2026 model rules are not retuned from these results during the prospective season test.
